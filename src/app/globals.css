@@ -58,7 +58,7 @@
 
 body::selection {
   background-color: var(--primary);
-  color: var(--background);
+  color: var(--popover);
 }
 
 body {
@@ -82,7 +82,8 @@ body {
   --accent-foreground: #202224;
   --destructive: #e93d3d;
   --destructive-foreground: #ffffff;
-  --border: #3D3D3D;
+  --border: #3d3d3d;
+  --secondary-border: #2d333e;
   --input: #787878;
   --ring: #168de1;
   --chart-1: #168de1;
@@ -90,8 +91,8 @@ body {
   --chart-3: #2440a7;
   --chart-4: #d9efb8;
   --chart-5: #dfec9c;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #202224;
+  --sidebar: #222222;
+  --sidebar-foreground: #ffffff;
   --sidebar-primary: #168de1;
   --sidebar-primary-foreground: #168de1;
   --sidebar-accent: #168de1;
@@ -170,4 +171,9 @@ div[data-input-otp-container="true"] {
 
 .jodit-container {
   min-height: 100% !important;
+}
+
+/* tab styles */
+.complaintTab button[data-state="active"] {
+  color: var(--primary);
 }

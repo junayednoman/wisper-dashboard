@@ -1,10 +1,3 @@
-export type TEarningCharts = TEarningChart[]
-
-export interface TEarningChart {
-  month: string
-  amount: number
-}
-
 // Define interface for table data
 export interface EarningTableData {
   id: string;

@@ -12,3 +12,10 @@ export interface TUserProfile {
   createdAt: string
   avgRating: number
 }
+
+export type TUserCharts = TUserChart[]
+
+export interface TUserChart {
+  month: string
+  amount: number
+}

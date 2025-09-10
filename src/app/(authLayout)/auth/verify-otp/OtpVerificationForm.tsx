@@ -33,7 +33,7 @@ const OtpVerificationForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
-  const token = Cookies.get("grandSportsVerifyToken") || "";
+  const token = Cookies.get("verifyToken") || "";
   console.log("email", email);
   const [verifyOtp, { isLoading: isVerifying }] = useVerifyOtpMutation();
   const [forgotPassword, { isLoading: isResending }] =
@@ -83,7 +83,7 @@ const OtpVerificationForm = () => {
     const onSuccess = (response: any) => {
       const verifyToken = response?.data?.verifyToken;
       if (verifyToken) {
-        Cookies.set("grandSportsVerifyToken", verifyToken, {
+        Cookies.set("verifyToken", verifyToken, {
           expires: 1 / 24, // Expires in 1 hour
           secure: true,
           sameSite: "strict",

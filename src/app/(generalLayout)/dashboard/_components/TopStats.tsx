@@ -1,16 +1,14 @@
 "use client";
-import UsersIcon from "@/assets/users.svg";
-import EarningIcon from "@/assets/earning.svg";
-import SubsIcon from "@/assets/subs.svg";
 import StatCard from "@/components/others/StatCard";
+import { User } from "lucide-react";
 
 const TopStats = ({
   data,
 }: {
   data: {
     totalUserCount: number;
-    totalRevenue: number;
-    newRegisterCount: number;
+    individuals: number;
+    businesses: number;
   };
 }) => {
   return (
@@ -18,18 +16,18 @@ const TopStats = ({
       <div className="grid grid-cols-3 gap-6">
         <StatCard
           title="Total Users"
-          icon={UsersIcon}
+          icon={<User />}
           value={data.totalUserCount || 0}
         />
         <StatCard
-          title="Total Earnings"
-          icon={EarningIcon}
-          value={data.totalRevenue || 0}
+          title="Individuals"
+          icon={<User />}
+          value={data.individuals || 0}
         />
         <StatCard
-          title="New Registers"
-          icon={SubsIcon}
-          value={data.newRegisterCount || 0}
+          title="Businesses"
+          icon={<User />}
+          value={data.businesses || 0}
         />
       </div>
     </section>

@@ -26,7 +26,7 @@ const ForgetPasswordForm = () => {
       // Set verifyToken in cookie
       const verifyToken = response?.data?.verifyToken;
       if (verifyToken) {
-        Cookies.set("grandSportsVerifyToken", verifyToken, {
+        Cookies.set("verifyToken", verifyToken, {
           expires: 1 / 24, // Expires in 1 hour, adjust as needed
           secure: true,
           sameSite: "strict",

@@ -5,8 +5,6 @@ import * as z from "zod";
 import AForm from "@/components/form/AForm";
 import { AInput } from "@/components/form/AInput";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useResetPasswordMutation } from "@/redux/api/authApi";
 import handleMutation from "@/utils/handleMutation";
 import Cookies from "js-cookie";
@@ -32,7 +30,7 @@ const NewPasswordForm = () => {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/dashboard";
   const email = searchParams.get("email") || "";
-  const token = Cookies.get("grandSportsVerifyToken") || "";
+  const token = Cookies.get("verifyToken") || "";
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
   const onSubmit = async (data: TNewPasswordFormValues) => {
@@ -51,7 +49,7 @@ const NewPasswordForm = () => {
     console.log("Reset Password Payload:", payload);
 
     const onSuccess = () => {
-      Cookies.remove("grandSportsVerifyToken"); // Clear token after use
+      Cookies.remove("verifyToken");
       router.push(redirectUrl);
     };
 
@@ -64,24 +62,11 @@ const NewPasswordForm = () => {
   };
 
   return (
-    <div className="w-[600px] bg-card rounded-2xl">
-      <div className="my-8">
-        <Button
-          type="button"
-          variant="link"
-          className="text-card-foreground p-0 h-auto text-lg font-medium"
-        >
-          <Link href="/auth/login" className="flex items-center gap-3">
-            <ArrowLeft className="!w-5 !h-5" />
-            <span>Back to login</span>
-          </Link>
-        </Button>
-      </div>
-
-      <div className="my-8">
-        <h1 className="text-3xl font-bold mb-2">Set New Password</h1>
-        <p className="text-card-foreground text-sm">
-          Please enter your new password
+    <div className="w-[600px] bg-card rounded-2xl p-8 py-10">
+      <div className="mb-20 text-center">
+        <h1 className="text-[32px] font-bold mb-2">Reset Password</h1>
+        <p className="text-card-foreground text-sm mx-32">
+          Set your new password to regain access to your account.
         </p>
       </div>
 

@@ -46,7 +46,7 @@ export function NavMain() {
               tooltip="Dashboard"
               className={`text-[15px] py-6 px-4 cursor-pointer min-w-8 duration-200 ease-linear ${
                 isActive("/dashboard")
-                  ? "bg-primary text-background hover:bg-primary/90"
+                  ? "bg-primary text-sidebar-accent-foreground hover:bg-primary/90"
                   : "hover:bg-muted"
               }`}
             >
@@ -67,7 +67,7 @@ export function NavMain() {
                 asChild // Render the Link as the button content
                 className={`text-[15px] py-6 px-4 cursor-pointer ${
                   isActive(item.url)
-                    ? "bg-primary text-background hover:bg-primary/90"
+                    ? "bg-primary text-sidebar-accent-foreground hover:bg-primary/90"
                     : "hover:bg-muted"
                 }`}
                 tooltip={item.title}

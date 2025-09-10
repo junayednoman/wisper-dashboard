@@ -1,6 +1,6 @@
 import Image from "next/image";
-import logo from "@/assets/logo.png";
-import icon from "@/assets/icon.png";
+import logo from "@/assets/logo.svg";
+import icon from "@/assets/icon.svg";
 import Link from "next/link";
 import { SidebarHeader, useSidebar } from "../ui/sidebar";
 
@@ -13,7 +13,7 @@ const SidebarTop = () => {
           href={"/dashboard"}
           className="flex items-center justify-between gap-6 mt-2 pl-1"
         >
-          <Image src={logo} alt="logo" width={82} height={82} />
+          <Image src={logo} alt="logo" width={100} height={100} />
         </Link>
       ) : (
         state === "collapsed" && (
