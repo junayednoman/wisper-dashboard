@@ -8,7 +8,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useState } from "react";
-import { yearOptions } from "@/data/global.data";
+import { userTypeOptions, yearOptions } from "@/data/global.data";
 import { AFilterSelect } from "@/components/form/AFilterSelect";
 
 const chartData = [
@@ -36,6 +36,9 @@ const chartConfig = {
 export function UserOverview() {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear.toString());
+
+  const [userType, setUserType] = useState<string>("all");
+
   const minValue = Math.min(...chartData.map((item) => item.value));
   const maxValue = Math.max(...chartData.map((item) => item.value));
   const yAxisDomain = [Math.floor(maxValue), Math.floor(minValue)];
@@ -47,13 +50,22 @@ export function UserOverview() {
         <h1 className="text-2xl font-bold text-primary-foreground">
           User Overview
         </h1>
-        <AFilterSelect
-          onChange={setYear}
-          placeholder={currentYear.toString()}
-          value={year}
-          options={yearOptions}
-          className="!w-[100px]"
-        />
+        <div className="flex items-center gap-4">
+          <AFilterSelect
+            onChange={setUserType}
+            placeholder={"user type"}
+            value={userType}
+            options={userTypeOptions}
+            className="!w-[110px]"
+          />
+          <AFilterSelect
+            onChange={setYear}
+            placeholder={currentYear.toString()}
+            value={year}
+            options={yearOptions}
+            className="!w-[90px]"
+          />
+        </div>
       </div>
       <ChartContainer config={chartConfig} className="h-[320px] w-full mt-12">
         <AreaChart

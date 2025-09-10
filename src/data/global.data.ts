@@ -8,3 +8,9 @@ export const yearOptions = [
   { value: "2029", label: "2029" },
   { value: "2030", label: "2030" },
 ];
+
+export const userTypeOptions = [
+  { value: "all", label: "All" },
+  { value: "individual", label: "Individual" },
+  { value: "business", label: "Business" },
+];
