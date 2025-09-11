@@ -3,16 +3,16 @@ import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export function AccountCard() {
+export function CommunityCard() {
   return (
     <Link
-      href={"/dashboard/user-management/rj7348ff3u8ufd44545"}
+      href={"/dashboard/community/rj7348ff3u8ufd44545"}
       className="flex items-center justify-between p-4 rounded-lg border border-border  transition-colors"
     >
       <div className="flex gap-2">
         {/* Profile Image */}
         <Image
-          src={"https://randomuser.me/api/portraits/men/23.jpg"}
+          src={"https://payload-marketing.moonpay.com/api/media/file/vibe.jpg"}
           alt={"Sarah Johnson"}
           width={50}
           height={50}
@@ -20,15 +20,13 @@ export function AccountCard() {
         />
 
         <div className="flex flex-col">
-          <h3 className="font-medium text-foreground">Sarah Johnson</h3>
-          <p className="text-sm text-muted-foreground">
-            johnsonsarah@gmail.com
-          </p>
+          Vibe Coding
+          <p className="text-sm text-muted-foreground">1254 members</p>
         </div>
 
         <div>
           <Badge variant="default" className="bg-primary text-white">
-            Personal
+            Group
           </Badge>
         </div>
       </div>

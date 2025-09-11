@@ -14,3 +14,9 @@ export const userTypeOptions = [
   { value: "individual", label: "Individual" },
   { value: "business", label: "Business" },
 ];
+
+export const communityTypeOptions = [
+  { value: "all", label: "All" },
+  { value: "group", label: "Group" },
+  { value: "class", label: "Class" },
+];

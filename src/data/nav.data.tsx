@@ -1,10 +1,4 @@
-import {
-  Bell,
-  CircleDollarSign,
-  Crown,
-  Settings,
-  UserRoundCog,
-} from "lucide-react";
+import { Bell, Crown, Settings, UserRoundCog, Users } from "lucide-react";
 
 type TNavMain = {
   title: string;
@@ -19,9 +13,9 @@ export const navItems: TNavMain = [
     icon: <UserRoundCog />,
   },
   {
-    title: "Earning Overview",
-    url: "/dashboard/earnings",
-    icon: <CircleDollarSign />,
+    title: "Community",
+    url: "/dashboard/community",
+    icon: <Users />,
   },
   {
     title: "Subscription Plans",
