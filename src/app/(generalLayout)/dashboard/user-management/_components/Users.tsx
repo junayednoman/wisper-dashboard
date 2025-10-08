@@ -23,7 +23,7 @@ const Users = () => {
           className="!w-[110px]"
         />
       </div>
-      <div className="space-y-4 mt-10">
+      <div className="space-y-3 mt-10">
         <AccountCard />
         <AccountCard />
         <AccountCard />

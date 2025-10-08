@@ -1,8 +1,8 @@
-import {  AccountCard } from "./AccountCard";
+import { AccountCard } from "./AccountCard";
 
 const Accounts = () => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <AccountCard />
       <AccountCard />
       <AccountCard />

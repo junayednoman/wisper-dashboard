@@ -46,7 +46,7 @@ const posts = [
 
 const Posts = () => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {posts?.map((post) => (
         <PostCard key={post.title} post={post} />
       ))}

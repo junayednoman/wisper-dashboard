@@ -2,7 +2,7 @@ import { JobCard } from "./JobCard";
 
 const RecentJobs = () => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <JobCard />
       <JobCard />
       <JobCard />

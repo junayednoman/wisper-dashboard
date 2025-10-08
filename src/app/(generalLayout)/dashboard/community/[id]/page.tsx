@@ -30,7 +30,7 @@ const CommunityDetailsPage = () => {
           className="w-[250px]"
         />
       </div>
-      <div className="space-y-4 mt-6">
+      <div className="space-y-3 mt-6">
         <AccountCard />
         <AccountCard />
         <AccountCard />

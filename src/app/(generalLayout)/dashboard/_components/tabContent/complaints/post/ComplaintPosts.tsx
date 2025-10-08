@@ -1,6 +1,6 @@
 import Postcard from "./PostCard";
 
-const posts = [
+export const posts = [
   {
     profileImage:
       "https://media.istockphoto.com/id/1465504312/vector/young-smiling-man-avatar-man-with-brown-beard-mustache-and-hair-wearing-yellow-sweater-or.jpg?s=612x612&w=0&k=20&c=9AyNmOwjadmLC1PKpANKEXj56e1KxHj9h9hGknd-Rb0=",
@@ -46,7 +46,7 @@ const posts = [
 
 const ComplaintPosts = () => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {posts?.map((post) => (
         <Postcard key={post.title} post={post} />
       ))}

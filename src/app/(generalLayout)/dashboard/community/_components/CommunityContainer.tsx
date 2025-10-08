@@ -30,7 +30,7 @@ const CommunityContainer = () => {
             className="!w-[100px]"
           />
         </div>
-        <div className="space-y-4 mt-10">
+        <div className="space-y-3 mt-10">
           <CommunityCard />
           <CommunityCard />
           <CommunityCard />

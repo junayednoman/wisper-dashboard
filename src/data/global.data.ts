@@ -1,4 +1,5 @@
-export const defaultImg = "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png";
+export const defaultImg =
+  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png";
 
 export const yearOptions = [
   { value: "2025", label: "2025" },
@@ -19,4 +20,9 @@ export const communityTypeOptions = [
   { value: "all", label: "All" },
   { value: "group", label: "Group" },
   { value: "class", label: "Class" },
+];
+
+export const complainTypeOptions = [
+  { value: "account", label: "Account" },
+  { value: "post", label: "Post" },
 ];

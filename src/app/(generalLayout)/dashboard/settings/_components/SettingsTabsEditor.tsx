@@ -5,13 +5,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Save, Check, Loader2 } from "lucide-react";
 import JoditTextEditor from "@/components/form/ATextEditor";
-import ASpinner from "@/components/ui/ASpinner";
-import AErrorMessage from "@/components/AErrorMessage";
-import {
-  useGetContentsQuery,
-  useUpdateContentMutation,
-} from "@/redux/api/contentApi";
-import handleMutation from "@/utils/handleMutation";
+// import ASpinner from "@/components/ui/ASpinner";
+// import AErrorMessage from "@/components/AErrorMessage";
+// import {
+//   useGetContentsQuery,
+//   useUpdateContentMutation,
+// } from "@/redux/api/contentApi";
+// import handleMutation from "@/utils/handleMutation";
 
 interface ContentSection {
   id: string;
@@ -31,34 +31,41 @@ const SettingsTabsEditor = () => {
     { id: "faq", title: "FAQ", content: "" },
   ]);
 
-  const {
-    data: contentsResponse,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useGetContentsQuery({ page: 1, limit: 1 });
-  const [updateContent] = useUpdateContentMutation();
-  const content = contentsResponse?.data[0];
+  // const {
+  //   data: contentsResponse,
+  //   isLoading,
+  //   isError,
+  //   error,
+  //   refetch,
+  // } = useGetContentsQuery({ page: 1, limit: 1 });
+  // const [updateContent] = useUpdateContentMutation();
+  // const content = contentsResponse?.data[0];
+
+  const content = {
+    _id: "",
+    aboutUs: "",
+    termsAndConditions: "",
+    privacyPolicy: "",
+  };
 
   // Initialize content sections from API
-  if (content && contentSections.every((section) => !section.content)) {
-    setContentSections([
-      { id: "about", title: "About Us", content: content.aboutUs },
-      {
-        id: "terms",
-        title: "Terms & Conditions",
-        content: content.termsAndConditions,
-      },
-      {
-        id: "privacy",
-        title: "Privacy Policy",
-        content: content.privacyPolicy,
-      },
-      { id: "supports", title: "Supports", content: content.supports },
-      { id: "faq", title: "FAQ", content: content.faq },
-    ]);
-  }
+  // if (content && contentSections.every((section) => !section.content)) {
+  //   setContentSections([
+  //     { id: "about", title: "About Us", content: content.aboutUs },
+  //     {
+  //       id: "terms",
+  //       title: "Terms & Conditions",
+  //       content: content.termsAndConditions,
+  //     },
+  //     {
+  //       id: "privacy",
+  //       title: "Privacy Policy",
+  //       content: content.privacyPolicy,
+  //     },
+  //     { id: "supports", title: "Supports", content: content.supports },
+  //     { id: "faq", title: "FAQ", content: content.faq },
+  //   ]);
+  // }
 
   const handleContentChange = (sectionId: string, content: string) => {
     setContentSections((prev) =>
@@ -74,46 +81,46 @@ const SettingsTabsEditor = () => {
 
     setSavingStates((prev) => ({ ...prev, [sectionId]: true }));
 
-    const section = contentSections.find((s) => s.id === sectionId);
-    const payload = {
-      id: content._id,
-      aboutUs: sectionId === "about" ? section?.content || "" : content.aboutUs,
-      termsAndConditions:
-        sectionId === "terms"
-          ? section?.content || ""
-          : content.termsAndConditions,
-      privacyPolicy:
-        sectionId === "privacy"
-          ? section?.content || ""
-          : content.privacyPolicy,
-      supports:
-        sectionId === "supports" ? section?.content || "" : content.supports,
-      faq: sectionId === "faq" ? section?.content || "" : content.faq,
-    };
+    // const section = contentSections.find((s) => s.id === sectionId);
+    // const payload = {
+    //   id: content._id,
+    //   aboutUs: sectionId === "about" ? section?.content || "" : content.aboutUs,
+    //   termsAndConditions:
+    //     sectionId === "terms"
+    //       ? section?.content || ""
+    //       : content.termsAndConditions,
+    //   privacyPolicy:
+    //     sectionId === "privacy"
+    //       ? section?.content || ""
+    //       : content.privacyPolicy,
+    //   supports:
+    //     sectionId === "supports" ? section?.content || "" : content.supports,
+    //   faq: sectionId === "faq" ? section?.content || "" : content.faq,
+    // };
 
-    handleMutation(
-      payload,
-      updateContent,
-      `Saving ${section?.title}...`,
-      () => {
-        setSavedStates((prev) => ({ ...prev, [sectionId]: true }));
-        setTimeout(() => {
-          setSavedStates((prev) => ({ ...prev, [sectionId]: false }));
-        }, 2000);
-        setSavingStates((prev) => ({ ...prev, [sectionId]: false }));
-      }
-    );
+    // handleMutation(
+    //   payload,
+    //   updateContent,
+    //   `Saving ${section?.title}...`,
+    //   () => {
+    //     setSavedStates((prev) => ({ ...prev, [sectionId]: true }));
+    //     setTimeout(() => {
+    //       setSavedStates((prev) => ({ ...prev, [sectionId]: false }));
+    //     }, 2000);
+    //     setSavingStates((prev) => ({ ...prev, [sectionId]: false }));
+    //   }
+    // );
   };
 
-  if (isLoading) return <ASpinner size={150} className="py-64" />;
-  if (isError)
-    return <AErrorMessage error={error} onRetry={refetch} className="py-64" />;
-  if (!content)
-    return (
-      <div className="py-64 text-center text-muted-foreground">
-        No content found
-      </div>
-    );
+  // if (isLoading) return <ASpinner size={150} className="py-64" />;
+  // if (isError)
+  //   return <AErrorMessage error={error} onRetry={refetch} className="py-64" />;
+  // if (!content)
+  //   return (
+  //     <div className="py-64 text-center text-muted-foreground">
+  //       No content found
+  //     </div>
+  //   );
 
   return (
     <div className="h-screen bg-background flex flex-col">
@@ -124,7 +131,7 @@ const SettingsTabsEditor = () => {
           className="flex flex-col"
         >
           {/* Tabs Header */}
-          <TabsList className="grid w-full grid-cols-5 bg-card mb-6 h-14">
+          <TabsList className="grid w-full grid-cols-5 bg-card h-14">
             <TabsTrigger
               value="about"
               className="data-[state=active]:bg-primary data-[state=active]:text-card"
@@ -142,18 +149,6 @@ const SettingsTabsEditor = () => {
               className="data-[state=active]:bg-primary data-[state=active]:text-card"
             >
               Privacy Policy
-            </TabsTrigger>
-            <TabsTrigger
-              value="supports"
-              className="data-[state=active]:bg-primary data-[state=active]:text-card"
-            >
-              Supports
-            </TabsTrigger>
-            <TabsTrigger
-              value="faq"
-              className="data-[state=active]:bg-primary data-[state=active]:text-card"
-            >
-              FAQ
             </TabsTrigger>
           </TabsList>
 

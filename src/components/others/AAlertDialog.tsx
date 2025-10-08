@@ -8,6 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
+  AlertDialogOverlay,
 } from "@/components/ui/alert-dialog";
 
 interface AlertDialogCustomProps {
@@ -34,7 +35,8 @@ export function AAlertDialog({
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-      <AlertDialogContent className="w-[320px] text-center">
+      <AlertDialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-[.8px]" />
+      <AlertDialogContent className="w-[320px] text-center bg-card">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-center">{title}</AlertDialogTitle>
           <AlertDialogDescription className="text-primary-foreground text-center">
