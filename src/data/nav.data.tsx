@@ -1,4 +1,11 @@
-import { Bell, Crown, Info, Settings, UserRoundCog, Users } from "lucide-react";
+import {
+  Bell,
+  Info,
+  Megaphone,
+  Settings,
+  UserRoundCog,
+  Users,
+} from "lucide-react";
 
 type TNavMain = {
   title: string;
@@ -23,9 +30,9 @@ export const navItems: TNavMain = [
     icon: <Info />,
   },
   {
-    title: "Subscription Plans",
-    url: "/dashboard/subscription-plans",
-    icon: <Crown />,
+    title: "Ad Management",
+    url: "/dashboard/ad-management",
+    icon: <Megaphone />,
   },
   {
     title: "Notifications",

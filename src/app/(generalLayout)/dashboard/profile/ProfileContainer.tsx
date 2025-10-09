@@ -5,18 +5,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProfileHeader from "./ProfileHeader";
 import EditProfileForm from "./EditProfileForm";
 import ChangePasswordForm from "./ChangePasswordForm";
-import { useGetProfileQuery } from "@/redux/api/profileApi";
-import ASpinner from "@/components/ui/ASpinner";
-import AErrorMessage from "@/components/AErrorMessage";
+// import { useGetProfileQuery } from "@/redux/api/profileApi";
+// import ASpinner from "@/components/ui/ASpinner";
+// import AErrorMessage from "@/components/AErrorMessage";
 const ProfileContainer = () => {
   const [activeTab, setActiveTab] = useState("edit-profile");
-  const { data, isLoading, isError, error, refetch } = useGetProfileQuery("");
-  console.log("error", error);
-  if (isLoading) return <ASpinner size={150} className="py-56" />;
-  if (isError)
-    return <AErrorMessage className="py-56" error={error} onRetry={refetch} />;
+  // const { data, isLoading, isError, error, refetch } = useGetProfileQuery("");
+  // console.log("error", error);
+  // if (isLoading) return <ASpinner size={150} className="py-56" />;
+  // if (isError)
+  //   return <AErrorMessage className="py-56" error={error} onRetry={refetch} />;
 
-  const profile = data?.data;
+  const profile = {
+    name: "John Doe",
+    email: "h5Vt2@example.com",
+    photoUrl:
+      "https://img.freepik.com/free-psd/3d-illustration-with-online-avatar_23-2151303048.jpg?semt=ais_hybrid&w=740&q=80",
+    address: "123 Main St, Anytown, USA",
+  };
 
   return (
     <div className="min-h-screen bg-card p-6 rounded-lg">
@@ -24,7 +30,7 @@ const ProfileContainer = () => {
         <ProfileHeader
           name={profile?.name || ""}
           role={"Admin"}
-          avatar={profile?.photoUrl || "/placeholder.svg?height=120&width=120"}
+          avatar={profile?.photoUrl}
         />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

@@ -36,7 +36,8 @@ const LoginForm = () => {
   };
 
   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
-    console.log("data", data);
+    toast.success("Login successful");
+    return router.push(redirectUrl);
     const { email, password } = data;
     await handleMutation(
       { email, password },

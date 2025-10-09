@@ -16,6 +16,7 @@ import { useAppDispatch } from "@/redux/hooks/hooks";
 import { useLogoutMutation } from "@/redux/api/authApi";
 import { logOut } from "@/redux/slice/authSlice";
 import handleMutation from "@/utils/handleMutation";
+import { toast } from "sonner";
 
 const ProfileDropdown = () => {
   const { data } = useGetProfileQuery("");
@@ -32,6 +33,8 @@ const ProfileDropdown = () => {
   };
 
   const handleLogout = async () => {
+    toast.success("Logout successful");
+    return router.push("/auth/login");
     await handleMutation({}, logout, "Logging out...", onSuccess);
   };
   return (
