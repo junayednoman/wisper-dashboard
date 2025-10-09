@@ -15,6 +15,7 @@ import { NextResponse, NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
+  console.log('searchParams', searchParams);
   if (pathname === "/") {
     return NextResponse.redirect(new URL("/dashboard", request.url))
   }

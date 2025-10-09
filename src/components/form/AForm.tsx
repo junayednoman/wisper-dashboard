@@ -11,7 +11,7 @@ import { Form } from "@/components/ui/form";
 import React from "react";
 
 interface AFormProps<T extends FieldValues> {
-  schema: z.ZodSchema<T>;
+  schema: z.ZodTypeAny;
   defaultValues?: DefaultValues<T> | Promise<DefaultValues<T>> | undefined;
   onSubmit: SubmitHandler<T>;
   children: React.ReactNode;
