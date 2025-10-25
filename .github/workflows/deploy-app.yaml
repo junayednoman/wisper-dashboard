@@ -1,0 +1,10 @@
+name: ready teh code and deploy
+
+on: [push, workflow_dispatch]
+
+jobs:
+  test-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: run the linting
+        run: npm run lint
