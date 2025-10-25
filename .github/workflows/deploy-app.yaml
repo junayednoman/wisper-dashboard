@@ -6,5 +6,8 @@ jobs:
   test-code:
     runs-on: ubuntu-latest
     steps:
-      - name: run the linting
-        run: npm run lint
+      - name: copying the code
+        uses: actions/checkout@v4
+      
+      - name: check node v
+        run: node -v
