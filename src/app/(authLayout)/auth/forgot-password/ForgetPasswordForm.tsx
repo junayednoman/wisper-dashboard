@@ -9,7 +9,6 @@ import { AInput } from "@/components/form/AInput";
 import { forgetPasswordValidation } from "@/validations/auth.validation";
 import { Button } from "@/components/ui/button";
 import handleMutation from "@/utils/handleMutation";
-import Cookies from "js-cookie";
 import { useForgetPasswordMutation } from "@/redux/api/authApi";
 
 const ForgetPasswordForm = () => {
@@ -18,24 +17,11 @@ const ForgetPasswordForm = () => {
 
   const onSubmit = async (data: z.infer<typeof forgetPasswordValidation>) => {
     const payload = { email: data.email };
-
-    // Log payload for debugging
-    console.log("Forgot Password Payload:", payload);
-
-    const onSuccess = (response: any) => {
-      // Set verifyToken in cookie
-      const verifyToken = response?.data?.verifyToken;
-      if (verifyToken) {
-        Cookies.set("verifyToken", verifyToken, {
-          expires: 1 / 24, // Expires in 1 hour, adjust as needed
-          secure: true,
-          sameSite: "strict",
-        });
-      }
+    const onSuccess = () => {
       router.push(`/auth/verify-otp?email=${encodeURIComponent(data.email)}`);
     };
 
-    handleMutation(payload, forgotPassword, "Sending reset code...", onSuccess);
+    handleMutation(payload, forgotPassword, "Sending otp ...", onSuccess);
   };
 
   return (

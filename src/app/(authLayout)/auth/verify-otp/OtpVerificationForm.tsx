@@ -33,8 +33,6 @@ const OtpVerificationForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
-  const token = Cookies.get("verifyToken") || "";
-  console.log("email", email);
   const [verifyOtp, { isLoading: isVerifying }] = useVerifyOtpMutation();
   const [forgotPassword, { isLoading: isResending }] =
     useForgetPasswordMutation();
@@ -49,22 +47,18 @@ const OtpVerificationForm = () => {
 
   // Handle form submission
   const onSubmit = (data: TOtpVerificationFormValues) => {
-    if (!email || !token) {
-      console.error("Email or token missing");
-      return;
+    if (!email) {
+      return console.error("Email is missing");
     }
 
     const payload = { otp: data.otp, email };
-
-    // Log payload for debugging
-    console.log("Verify OTP Payload:", payload);
 
     const onSuccess = () => {
       router.push(`/auth/set-new-password?email=${encodeURIComponent(email)}`);
     };
 
     handleMutation(
-      { token, credentials: payload },
+      payload,
       verifyOtp,
       "Verifying OTP...",
       onSuccess

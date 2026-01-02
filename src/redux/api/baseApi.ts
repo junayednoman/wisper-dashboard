@@ -1,22 +1,27 @@
-
-import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import Cookies from 'js-cookie';
-import { logOut, setUser } from '../slice/authSlice';
-import { RootState } from '../store';
+import {
+  BaseQueryFn,
+  createApi,
+  FetchArgs,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+} from "@reduxjs/toolkit/query/react";
+import Cookies from "js-cookie";
+import { logOut, setUser } from "../slice/authSlice";
+import { RootState } from "../store";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
   credentials: "include",
   prepareHeaders: (headers) => {
-    const accessToken = Cookies.get("accessToken");
+    const wisperAccessToken = Cookies.get("wisperAccessToken");
 
     // If user have a token set it in the state
-    if (accessToken) {
-      headers.set("authorization", `${accessToken}`);
+    if (wisperAccessToken) {
+      headers.set("authorization", `Bearer ${wisperAccessToken}`);
     }
     return headers;
-  }
-})
+  },
+});
 
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
@@ -27,22 +32,25 @@ const baseQueryWithReauth: BaseQueryFn<
 
   // retrieve new token
   if (result?.error?.status === 401) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh-token`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include"
-    }).then(res => res.json());
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh-token`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    ).then((res) => res.json());
 
-    if (res?.data?.accessToken) {
+    if (res?.data?.wisperAccessToken) {
       const user = (api.getState() as RootState).auth.user;
 
       api.dispatch(
         setUser({
           user,
-          token: res.data.accessToken,
-        }),
+          token: res.data.wisperAccessToken,
+        })
       );
 
       result = await baseQuery(args, api, extraOptions);
@@ -51,11 +59,22 @@ const baseQueryWithReauth: BaseQueryFn<
     }
   }
   return result;
-}
+};
 
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["auth", "profile", "meta", "leaderboard", "banner", "user", "earning", "plans", "notification", "content"],
-  endpoints: () => ({})
-})
+  tagTypes: [
+    "auth",
+    "profile",
+    "meta",
+    "leaderboard",
+    "banner",
+    "user",
+    "earning",
+    "plans",
+    "notification",
+    "content",
+  ],
+  endpoints: () => ({}),
+});

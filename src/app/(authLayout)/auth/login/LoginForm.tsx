@@ -3,11 +3,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import * as z from "zod";
-
 import AForm from "@/components/form/AForm";
 import { AInput } from "@/components/form/AInput";
 import { Button } from "@/components/ui/button";
-
 import { loginSchema } from "@/validations/auth.validation";
 import { useLoginMutation } from "@/redux/api/authApi";
 import { setUser } from "@/redux/slice/authSlice";
@@ -27,7 +25,7 @@ const LoginForm = () => {
 
   const onSuccess = (res: any) => {
     const decodedUser = jwtDecode(res.data.accessToken) as TDecodedUser;
-    if (decodedUser?.role !== "admin")
+    if (decodedUser?.role !== "ADMIN")
       return toast.warning("User does not have the required role (admin)", {
         duration: 7000,
       });
@@ -36,8 +34,6 @@ const LoginForm = () => {
   };
 
   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
-    toast.success("Login successful");
-    return router.push(redirectUrl);
     const { email, password } = data;
     await handleMutation(
       { email, password },
@@ -60,8 +56,8 @@ const LoginForm = () => {
       <AForm
         schema={loginSchema}
         defaultValues={{
-          email: "junayednoman05@gmail.com",
-          password: "newpass",
+          email: "lerner.curious@gmail.com",
+          password: "Admin@123",
           rememberPassword: false,
         }}
         onSubmit={onSubmit}

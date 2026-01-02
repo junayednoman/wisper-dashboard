@@ -15,12 +15,12 @@ import { NextResponse, NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
-  console.log('searchParams', searchParams);
+  console.log("searchParams", searchParams);
   if (pathname === "/") {
-    return NextResponse.redirect(new URL("/dashboard", request.url))
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // const token = request.cookies.get("accessToken")?.value;
+  // const token = request.cookies.get("wisperAccessToken")?.value;
 
   // let decodedUser: DecodedUser | null = null;
   // let isAuthenticated = false;

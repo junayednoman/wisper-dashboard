@@ -30,35 +30,25 @@ const NewPasswordForm = () => {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/dashboard";
   const email = searchParams.get("email") || "";
-  const token = Cookies.get("verifyToken") || "";
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
   const onSubmit = async (data: TNewPasswordFormValues) => {
-    if (!email || !token) {
-      console.error("Email or token missing");
+    if (!email) {
+      console.error("Email is missing");
       return;
     }
-
     const payload = {
       email,
-      newPassword: data.newPassword,
-      confirmPassword: data.confirmPassword,
+      password: data.newPassword,
     };
 
     // Log payload for debugging
-    console.log("Reset Password Payload:", payload);
-
     const onSuccess = () => {
       Cookies.remove("verifyToken");
       router.push(redirectUrl);
     };
 
-    handleMutation(
-      { token, credentials: payload },
-      resetPassword,
-      "Resetting password...",
-      onSuccess
-    );
+    handleMutation(payload, resetPassword, "Resetting password...", onSuccess);
   };
 
   return (
@@ -94,7 +84,7 @@ const NewPasswordForm = () => {
         />
 
         <Button
-          disabled={isLoading || !email || !token}
+          disabled={isLoading || !email}
           type="submit"
           className="h-12 w-full"
         >

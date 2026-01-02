@@ -16,12 +16,10 @@ import { logOut } from "@/redux/slice/authSlice";
 import { navItems } from "@/data/nav.data";
 import handleMutation from "@/utils/handleMutation";
 import { useLogoutMutation } from "@/redux/api/authApi";
-import { toast } from "sonner";
 
 export function NavMain() {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
-  // const [logout] = useLogoutMutation();
   const router = useRouter();
   const [logout] = useLogoutMutation();
 
@@ -34,8 +32,6 @@ export function NavMain() {
   };
 
   const handleLogout = async () => {
-    toast.success("Logout successful");
-    return router.push("/auth/login");
     await handleMutation({}, logout, "Logging out...", onSuccess);
   };
 

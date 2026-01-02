@@ -1,17 +1,16 @@
-
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import { RootState } from "../store";
 
 type TAuthType = {
-  user: null | { email: string, role: "admin" },
+  user: null | { email: string; role: "admin" };
   token: null | string;
-}
+};
 
 const initialState: TAuthType = {
   user: null,
   token: null,
-}
+};
 
 const authSlice = createSlice({
   name: "auth",
@@ -23,16 +22,16 @@ const authSlice = createSlice({
       state.token = token;
 
       // set cookie for middleware access
-      Cookies.set("accessToken", token, { path: "/" });
+      Cookies.set("wisperAccessToken", token, { path: "/" });
     },
     logOut: (state) => {
       state.user = null;
       state.token = null;
       // Remove token for cookies
-      Cookies.remove("accessToken", { path: "/" });
-    }
-  }
-})
+      Cookies.remove("wisperAccessToken", { path: "/" });
+    },
+  },
+});
 
 export const { setUser, logOut } = authSlice.actions;
 export default authSlice.reducer;
