@@ -8,12 +8,15 @@ export const yearOptions = [
   { value: "2028", label: "2028" },
   { value: "2029", label: "2029" },
   { value: "2030", label: "2030" },
+  { value: "2031", label: "2031" },
+  { value: "2032", label: "2032" },
+  { value: "2033", label: "2033" },
 ];
 
 export const userTypeOptions = [
-  { value: "all", label: "All" },
-  { value: "individual", label: "Individual" },
-  { value: "business", label: "Business" },
+  { value: "ALL", label: "All" },
+  { value: "PERSON", label: "Individual" },
+  { value: "BUSINESS", label: "Business" },
 ];
 
 export const communityTypeOptions = [

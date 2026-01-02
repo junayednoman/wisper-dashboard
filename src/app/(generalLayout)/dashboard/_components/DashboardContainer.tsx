@@ -8,11 +8,6 @@ import NewUsers from "./newUsers/NewUsers";
 const DashboardContainer = () => {
   // const currentYear = new Date().getFullYear();
   // const [year, setYear] = useState<string>(currentYear.toString());
-  const data = {
-    totalUserCount: 2340,
-    individuals: 124,
-    businesses: 510,
-  };
 
   return (
     <AContainer>
@@ -22,7 +17,7 @@ const DashboardContainer = () => {
       />
       <div className="flex gap-10 mt-8 h-fit">
         <div className="w-[62%]">
-          <TopStats data={data} />
+          <TopStats />
           <UserOverview />
           <NewUsers />
         </div>

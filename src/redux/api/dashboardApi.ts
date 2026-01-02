@@ -2,15 +2,23 @@ import { baseApi } from "./baseApi";
 
 const dashboardApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMeta: builder.query({
+    getUserStats: builder.query({
       query: (params) => ({
-        url: "/meta",
+        url: "/dashboard/stats",
         method: "GET",
-        params
+        params,
       }),
-      providesTags: ["meta"]
+      providesTags: ["dashboard"],
+    }),
+    getUserOverview: builder.query({
+      query: (params) => ({
+        url: "/dashboard/user-overview",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["dashboard"],
     }),
   }),
-})
+});
 
-export const { useGetMetaQuery } = dashboardApi;
+export const { useGetUserStatsQuery, useGetUserOverviewQuery } = dashboardApi;

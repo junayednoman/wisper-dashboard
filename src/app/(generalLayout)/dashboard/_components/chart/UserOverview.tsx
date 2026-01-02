@@ -10,21 +10,9 @@ import {
 import { useState } from "react";
 import { userTypeOptions, yearOptions } from "@/data/global.data";
 import { AFilterSelect } from "@/components/form/AFilterSelect";
-
-const chartData = [
-  { month: "Jan", value: 10.55 },
-  { month: "Feb", value: 25 },
-  { month: "Mar", value: 40 },
-  { month: "Apr", value: 60 },
-  { month: "May", value: 100.5 },
-  { month: "Jun", value: 70 },
-  { month: "Jul", value: 50 },
-  { month: "Aug", value: 65 },
-  { month: "Sep", value: 45 },
-  { month: "Oct", value: 35 },
-  { month: "Nov", value: 30 },
-  { month: "Dec", value: 40 },
-];
+import { useGetUserOverviewQuery } from "@/redux/api/dashboardApi";
+import ASpinner from "@/components/ui/ASpinner";
+import AErrorMessage from "@/components/AErrorMessage";
 
 const chartConfig = {
   value: {
@@ -36,14 +24,30 @@ const chartConfig = {
 export function UserOverview() {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear.toString());
+  const [role, setRole] = useState<string>("ALL");
+  
+  const { data, isLoading, isError, refetch } = useGetUserOverviewQuery({
+    year,
+    role: role === "ALL" ? "" : role,
+  });
 
-  const [userType, setUserType] = useState<string>("all");
+  const overview = data?.data;
 
-  const minValue = Math.min(...chartData.map((item) => item.value));
-  const maxValue = Math.max(...chartData.map((item) => item.value));
+  if (isLoading)
+    return (
+      <div className="bg-card rounded-xl p-6 px-8 mt-6 h-[470px] flex justify-center items-center">
+        <ASpinner className="!bg-card p-6 px-8 rounded-xl" size={120} />
+      </div>
+    );
+  if (isError)
+    return (
+      <div className="bg-card rounded-xl p-6 px-8 mt-6 h-[470px] flex justify-center items-center">
+        <AErrorMessage className="!bg-card rounded-xl" onRetry={refetch} />
+      </div>
+    );
+  const minValue = Math.min(...overview.map((item: any) => Number(item.users)));
+  const maxValue = Math.max(...overview.map((item: any) => Number(item.users)));
   const yAxisDomain = [Math.floor(maxValue), Math.floor(minValue)];
-  console.log("year", year);
-
   return (
     <div className="bg-card rounded-xl p-6 px-8 mt-6">
       <div className="flex items-center justify-between">
@@ -52,9 +56,9 @@ export function UserOverview() {
         </h1>
         <div className="flex items-center gap-4">
           <AFilterSelect
-            onChange={setUserType}
+            onChange={setRole}
             placeholder={"user type"}
-            value={userType}
+            value={role}
             options={userTypeOptions}
             className="!w-[110px]"
           />
@@ -67,68 +71,77 @@ export function UserOverview() {
           />
         </div>
       </div>
-      <ChartContainer config={chartConfig} className="h-[320px] w-full mt-12">
-        <AreaChart
-          accessibilityLayer
-          data={chartData}
-          margin={{
-            top: 20,
-            left: 12,
-            right: 12,
-          }}
-        >
-          <CartesianGrid vertical={false} stroke="#e0e0e0" />
-          <XAxis
-            dataKey="month"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={10}
-            tickFormatter={(value) => value.slice(0, 3)}
-          />
-          <YAxis
-            domain={yAxisDomain}
-            stroke="#636566"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={20}
-          />
-          <ChartTooltip
-            cursor={false}
-            content={
-              <ChartTooltipContent
-                formatter={(value) => (
-                  <div className="flex items-center justify-between w-full">
-                    <p className="text-muted-foreground font-medium">Users: </p>
-                    <p>${value}</p>
-                  </div>
-                )}
-              />
-            }
-          />
-          <defs>
-            <linearGradient id="fillUsers" x1="0" y1="0" x2="0" y2="1">
-              <stop
-                offset="5%"
-                stopColor="var(--color-value)"
-                stopOpacity={0.8}
-              />
-              <stop
-                offset="95%"
-                stopColor="var(--color-value)"
-                stopOpacity={0.1}
-              />
-            </linearGradient>
-          </defs>
-          <Area
-            dataKey="value"
-            type="monotone"
-            fill="url(#fillUsers)"
-            fillOpacity={0.6}
-            stroke="var(--color-value)"
-            stackId="a"
-          />
-        </AreaChart>
-      </ChartContainer>
+
+      {maxValue > 0 ? (
+        <ChartContainer config={chartConfig} className="h-[320px] w-full mt-12">
+          <AreaChart
+            accessibilityLayer
+            data={overview}
+            margin={{
+              top: 20,
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} stroke="#e0e0e0" />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={10}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <YAxis
+              domain={yAxisDomain}
+              stroke="#636566"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={20}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  formatter={(value) => (
+                    <div className="flex items-center justify-between w-full">
+                      <p className="text-muted-foreground font-medium">
+                        Users:{" "}
+                      </p>
+                      <p>{value}</p>
+                    </div>
+                  )}
+                />
+              }
+            />
+            <defs>
+              <linearGradient id="fillUsers" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-value)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-value)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+            </defs>
+            <Area
+              dataKey="users"
+              type="monotone"
+              fill="url(#fillUsers)"
+              fillOpacity={0.6}
+              stroke="var(--color-value)"
+              stackId="a"
+            />
+          </AreaChart>
+        </ChartContainer>
+      ) : (
+        <div className="bg-card rounded-xl p-6 px-8 mt-6 h-[380px] flex justify-center items-center">
+          <p className="text-muted-foreground">No data found!</p>
+        </div>
+      )}
     </div>
   );
 }

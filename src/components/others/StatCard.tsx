@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import CountUp from "react-countup";
 
 type StatCardProps = {
   title: string;
@@ -15,7 +16,7 @@ export default function StatCard({ title, value, icon }: StatCardProps) {
         {icon}
       </div>
       <span className="text-4xl font-bold tabular-nums text-primary-foreground">
-        {value}
+        <CountUp duration={4} end={Number(value)} />
       </span>
     </div>
   );
