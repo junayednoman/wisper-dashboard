@@ -4,21 +4,13 @@ const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query({
       query: (params) => ({
-        url: "/profiles",
+        url: "/auths",
         method: "GET",
-        params
+        params,
       }),
-      providesTags: ["user"]
-    }),
-    changeUseStatus: builder.mutation({
-      query: (data) => ({
-        url: `/profiles/change-status`,
-        method: "PATCH",
-        body: data
-      }),
-      invalidatesTags: ["user"]
+      providesTags: ["user"],
     }),
   }),
-})
+});
 
-export const { useGetUsersQuery, useChangeUseStatusMutation } = userApi;
+export const { useGetUsersQuery } = userApi;

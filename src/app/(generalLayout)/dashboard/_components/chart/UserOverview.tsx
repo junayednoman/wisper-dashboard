@@ -25,8 +25,8 @@ export function UserOverview() {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear.toString());
   const [role, setRole] = useState<string>("ALL");
-  
-  const { data, isLoading, isError, refetch } = useGetUserOverviewQuery({
+
+  const { data, isLoading, isError, error, refetch } = useGetUserOverviewQuery({
     year,
     role: role === "ALL" ? "" : role,
   });
@@ -42,7 +42,11 @@ export function UserOverview() {
   if (isError)
     return (
       <div className="bg-card rounded-xl p-6 px-8 mt-6 h-[470px] flex justify-center items-center">
-        <AErrorMessage className="!bg-card rounded-xl" onRetry={refetch} />
+        <AErrorMessage
+          error={error}
+          className="!bg-card rounded-xl"
+          onRetry={refetch}
+        />
       </div>
     );
   const minValue = Math.min(...overview.map((item: any) => Number(item.users)));

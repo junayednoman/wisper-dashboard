@@ -6,7 +6,6 @@ export const createPlanSchema = z.object({
   price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: "Price must be a positive number",
   }),
-  // billingCycle: z.enum(["monthly", "yearly"], { message: "Billing cycle is required" }), // Optional
 });
 
 export type CreatePlanFormValues = z.infer<typeof createPlanSchema>;

@@ -1,4 +1,8 @@
-import Postcard from "./PostCard";
+import { useGetComplaintsQuery } from "@/redux/api/complaintApi";
+import { TComplaint } from "@/interface/post.interface";
+import ASpinner from "@/components/ui/ASpinner";
+import AErrorMessage from "@/components/AErrorMessage";
+import ComplaintPostCard from "./ComplaintPostCard";
 
 export const posts = [
   {
@@ -45,10 +49,39 @@ export const posts = [
 ];
 
 const ComplaintPosts = () => {
+  const { data, isLoading, isError, error, refetch } = useGetComplaintsQuery({
+    type: "POST",
+    page: 1,
+    limit: 4,
+  });
+
+  const complaints = data?.data?.complaints || [];
+  if (isLoading)
+    return (
+      <div className="min-h-[500px] flex justify-center items-center">
+        <ASpinner className="flex justify-center items-center" />
+      </div>
+    );
+  if (isError)
+    return (
+      <div className="min-h-[500px] flex justify-center items-center">
+        <AErrorMessage error={error} onRetry={refetch} />
+      </div>
+    );
+  if (complaints.length === 0) {
+    return (
+      <div className="min-h-[500px] flex justify-center items-center">
+        <div className="text-center">
+          <p className="text-muted-foreground">No Complaints Found</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
-      {posts?.map((post) => (
-        <Postcard key={post.title} post={post} />
+      {complaints?.map((complaint: TComplaint) => (
+        <ComplaintPostCard key={complaint.id} complaint={complaint} />
       ))}
     </div>
   );

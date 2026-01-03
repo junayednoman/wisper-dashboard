@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
 
 interface ErrorComponentProps {
-  error?: any;
+  error: any;
   onRetry: () => void;
   className?: string;
 }

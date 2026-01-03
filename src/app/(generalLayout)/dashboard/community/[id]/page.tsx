@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { AccountCard } from "../../_components/tabContent/complaints/accounts/AccountCard";
+import { AccountCard } from "../../_components/tabContent/complaints/accounts/ComplaintAccountCard";
 import { Input } from "@/components/ui/input";
 import { APagination } from "@/components/ui/APagination";
 import AContainer from "@/components/AContainer";

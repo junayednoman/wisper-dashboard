@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { AccountCard } from "../../_components/tabContent/complaints/accounts/AccountCard";
+import { AccountCard } from "../../_components/tabContent/complaints/accounts/ComplaintAccountCard";
 import { AFilterSelect } from "@/components/form/AFilterSelect";
 import { userTypeOptions } from "@/data/global.data";
 import { Input } from "@/components/ui/input";

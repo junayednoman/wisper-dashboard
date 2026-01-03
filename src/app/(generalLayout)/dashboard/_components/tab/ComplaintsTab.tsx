@@ -1,6 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ComplaintPosts from "../tabContent/complaints/post/ComplaintPosts";
 import Accounts from "../tabContent/complaints/accounts/Accounts";
+
 const ComplaintsTab = () => {
   return (
     <Tabs defaultValue="complaintsPosts" className="complaintTab">

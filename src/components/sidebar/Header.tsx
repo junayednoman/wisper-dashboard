@@ -3,20 +3,18 @@ import Link from "next/link";
 import { SidebarTrigger } from "../ui/sidebar";
 import { Bell } from "lucide-react";
 import ProfileDropdown from "@/app/(generalLayout)/sections/dashboard/ProfileDropdown";
-import { useGetAllNotificationsQuery } from "@/redux/api/notificationApi";
 import { useEffect } from "react";
 import { useSocket } from "@/hooks/useSocket";
 import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
 import { selectUser } from "@/redux/slice/authSlice";
-import { baseApi } from "@/redux/api/baseApi";
 
 const Header = () => {
-  const { data } = useGetAllNotificationsQuery("");
+  // const { data } = useGetAllNotificationsQuery("");
   const tokenUser = useAppSelector(selectUser) as any;
   const dispatch = useAppDispatch();
 
-  const unreadNotifications = data?.data?.unreadNotification;
+  // const unreadNotifications = data?.data?.unreadNotification;
   const socket = useSocket();
   useEffect(() => {
     if (socket) {
@@ -29,7 +27,7 @@ const Header = () => {
         toast.info(newNotification.message, {
           duration: 4000,
         });
-        dispatch(baseApi.util.invalidateTags(["notification"]));
+        // dispatch(baseApi.util.invalidateTags(["notification"]));
       });
 
       socket.on("connect", () => {
@@ -58,7 +56,7 @@ const Header = () => {
           >
             <Bell size={28} className="ml-1 text-primary" />
             <p className="bg-primary/10 flex items-center justify-center text-primary rounded-full w-[33px] h-[33px]">
-              {unreadNotifications || 0}
+              {/* {unreadNotifications || 0} */}12
             </p>
           </Link>
           <ProfileDropdown />

@@ -6,16 +6,18 @@ import { useGetUserStatsQuery } from "@/redux/api/dashboardApi";
 import { BriefcaseBusiness, User, Users } from "lucide-react";
 
 const TopStats = () => {
-  const {
-    data,
-    isLoading,
-    isError,
-    refetch,
-  } = useGetUserStatsQuery({});
+  const { data, isLoading, isError, error, refetch } = useGetUserStatsQuery({});
   const stats = data?.data;
 
   if (isLoading) return <ASpinner className="!bg-card p-6 px-8 rounded-xl" />;
-  if (isError) return <AErrorMessage className="!bg-card rounded-xl" onRetry={refetch} />;
+  if (isError)
+    return (
+      <AErrorMessage
+        error={error}
+        className="!bg-card rounded-xl"
+        onRetry={refetch}
+      />
+    );
 
   return (
     <section>

@@ -5,10 +5,8 @@ import TopStats from "./TopStats";
 import DashboardTabs from "./tab/DashboardTabs";
 import { UserOverview } from "./chart/UserOverview";
 import NewUsers from "./newUsers/NewUsers";
-const DashboardContainer = () => {
-  // const currentYear = new Date().getFullYear();
-  // const [year, setYear] = useState<string>(currentYear.toString());
 
+const DashboardContainer = () => {
   return (
     <AContainer>
       <PageTitle

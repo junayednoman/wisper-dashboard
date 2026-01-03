@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
-import { useGetProfileQuery } from "@/redux/api/profileApi";
+// import { useGetProfileQuery } from "@/redux/api/profileApi";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks/hooks";
 import { logOut } from "@/redux/slice/authSlice";
@@ -18,8 +18,8 @@ import handleMutation from "@/utils/handleMutation";
 import { useLogoutMutation } from "@/redux/api/authApi";
 
 const ProfileDropdown = () => {
-  const { data } = useGetProfileQuery("");
-  const profile = data?.data;
+  // const { data } = useGetProfileQuery("");
+  // const profile = data?.data;
 
   const pathname = usePathname();
   const dispatch = useAppDispatch();
@@ -39,7 +39,7 @@ const ProfileDropdown = () => {
       <DropdownMenuTrigger>
         <button className="">
           <Image
-            src={profile?.photoUrl || avatarImg}
+            src={avatarImg}
             alt="logo"
             width={40}
             height={40}
