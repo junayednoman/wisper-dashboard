@@ -54,8 +54,8 @@ export function AccountCard() {
           onRestrict={() => console.log("User restricted")}
           onRestrictDelete={() => console.log("User restricted & post deleted")}
         >
-          <Button className="w-[36px]">
-            <Eye />
+          <Button size="icon" className="w-[37px] h-[37px]">
+            <Eye className="!w-[19px] !h-[19px]" />
           </Button>
         </AccountComplainDetailsModal>
         <AAlertDialog onAction={handleDelete}>

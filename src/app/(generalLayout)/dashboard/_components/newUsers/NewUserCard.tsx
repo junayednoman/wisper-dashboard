@@ -30,7 +30,7 @@ export function NewUserCard({ data }: { data: any }) {
             variant="default"
             className={`${
               data?.role === "PERSON" ? "bg-primary" : "bg-[#FF9F41]"
-            } text-white`}
+            } text-white !capitalize`}
           >
             {data?.role}
           </Badge>

@@ -15,7 +15,7 @@ export const yearOptions = [
 
 export const userTypeOptions = [
   { value: "ALL", label: "All" },
-  { value: "PERSON", label: "Individual" },
+  { value: "PERSON", label: "Person" },
   { value: "BUSINESS", label: "Business" },
 ];
 
