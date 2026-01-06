@@ -1,17 +1,27 @@
 import { AAlertDialog } from "@/components/others/AAlertDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Lock } from "lucide-react";
+import { Eye, Loader, Lock, LockOpen } from "lucide-react";
 import { TUser } from "@/interface/user.interface";
-import { AccountDetailsModalModal } from "./modal/AccountDetailsModal";
+import Link from "next/link";
+import handleMutation from "@/utils/handleMutation";
+import { useChangeAccountStatusMutation } from "@/redux/api/userApi";
 
 interface AccountCardProps {
   user: TUser;
 }
 
 export function AccountCard({ user }: AccountCardProps) {
-  const handleDelete = () => {
-    console.log("Restrict/Delete user:", user.id);
+  const [changeStatus, { isLoading }] = useChangeAccountStatusMutation();
+  const handleBlockUser = () => {
+    handleMutation(
+      {
+        id: user.id,
+        payload: { status: user.status === "ACTIVE" ? "BLOCKED" : "ACTIVE" },
+      },
+      changeStatus,
+      "Changing status..."
+    );
   };
 
   const isPersonal = user.role === "personal" || !!user.person;
@@ -30,7 +40,8 @@ export function AccountCard({ user }: AccountCardProps) {
           className="bg-center bg-cover bg-no-repeat rounded-full size-[50px]"
           style={{
             backgroundImage: `url(${
-              displayImage || "https://randomuser.me/api/portraits/men/23.jpg"
+              displayImage ||
+              "https://static.vecteezy.com/system/resources/previews/024/766/958/non_2x/default-male-avatar-profile-icon-social-media-user-free-vector.jpg"
             })`,
           }}
         />
@@ -51,40 +62,39 @@ export function AccountCard({ user }: AccountCardProps) {
       </div>
 
       <div className="flex items-center gap-2">
-        <AccountDetailsModalModal
-          user={{
-            name: displayName || "Unknown",
-            role: user.role,
-            avatar: displayImage || "",
-          }}
-          post={{
-            content: "Sample reported post content...",
-            stats: "◉ 10K Views • 30 mins",
-          }}
-          reasons={[
-            "Just to let you know this might be a problem",
-            "Disrespectful and harmful behavior",
-            "Violating platform's harassment policy",
-          ]}
-          onRestrict={() => console.log("User restricted")}
-          onRestrictDelete={() => console.log("User restricted & post deleted")}
+        <Link
+          href={`/dashboard/user-management/${user.id}`}
+          className="rounded-full"
         >
           <Button size="icon" className="w-[37px] h-[37px]">
             <Eye className="!w-[19px] !h-[19px]" />
           </Button>
-        </AccountDetailsModalModal>
+        </Link>
 
         <AAlertDialog
-          title="Restrict User?"
-          description="This will restrict the user's account. Are you sure?"
-          onAction={handleDelete}
+          actionText={user.status === "ACTIVE" ? "Block" : "Unblock"}
+          title={user.status === "ACTIVE" ? "Block User?" : "Unblock User?"}
+          description={`Are you sure you want to ${
+            user.status === "ACTIVE" ? "block" : "unblock"
+          } the user?`}
+          onAction={handleBlockUser}
         >
           <Button
-            variant="destructive"
             size="icon"
-            className="w-[36px] h-[36px]"
+            className={`w-[36px] h-[36px] ${
+              user.status === "ACTIVE"
+                ? "bg-destructive hover:bg-destructive!"
+                : "bg-green-600 hover:bg-green-600!"
+            }`}
+            disabled={isLoading}
           >
-            <Lock />
+            {isLoading ? (
+              <Loader className="animate-spin" />
+            ) : user.status === "ACTIVE" ? (
+              <Lock />
+            ) : (
+              <LockOpen />
+            )}
           </Button>
         </AAlertDialog>
       </div>

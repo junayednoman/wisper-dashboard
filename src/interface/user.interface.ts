@@ -23,6 +23,7 @@ export interface TUserChart {
 export interface TUser {
   id: string;
   role: string;
+  status: "ACTIVE" | "BLOCKED";
   createdAt: string;
   person: TPerson;
   business: TBusiness;

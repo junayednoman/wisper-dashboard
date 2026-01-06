@@ -43,7 +43,7 @@ export function AAlertDialog({
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="!justify-center">
+        <AlertDialogFooter className="!justify-center mt-6">
           <AlertDialogCancel className="hover:text-foreground">
             {cancelText}
           </AlertDialogCancel>

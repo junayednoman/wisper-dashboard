@@ -7,11 +7,12 @@ export const metadata: Metadata = {
   title: "User details",
 };
 
-const UserDetailsPage = () => {
+const UserDetailsPage = ({ params }: { params: { id: string } }) => {
+  const id = params.id;
   return (
     <>
       <AContainer>
-        <UserDetailsData />
+        <UserDetailsData id={id} />
       </AContainer>
       <UserDetailsTabs />
     </>

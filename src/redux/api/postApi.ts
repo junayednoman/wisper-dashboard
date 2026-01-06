@@ -10,7 +10,17 @@ const postApi = baseApi.injectEndpoints({
       }),
       providesTags: ["posts"],
     }),
+    deletePost: builder.mutation({
+      query: (id) => ({
+        url: `/posts/status/${id}`,
+        method: "PATCH",
+        body: {
+          status: "DELETED",
+        },
+      }),
+      invalidatesTags: ["posts", "complaint"],
+    }),
   }),
 });
 
-export const { useGetPostsQuery } = postApi;
+export const { useGetPostsQuery, useDeletePostMutation } = postApi;

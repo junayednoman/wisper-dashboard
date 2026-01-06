@@ -1,32 +1,46 @@
 import { Badge } from "@/components/ui/badge";
+import { TCommunity } from "@/interface/community.interface";
 import { ChevronRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
-export function CommunityCard() {
+export function CommunityCard({
+  community,
+  communityType,
+}: {
+  community: TCommunity;
+  communityType: string;
+}) {
   return (
     <Link
-      href={"/dashboard/community/rj7348ff3u8ufd44545"}
+      href={`/dashboard/community/${community.id}`}
       className="flex items-center justify-between p-4 rounded-lg border border-border  transition-colors"
     >
       <div className="flex gap-2">
         {/* Profile Image */}
-        <Image
-          src={"https://payload-marketing.moonpay.com/api/media/file/vibe.jpg"}
-          alt={"Sarah Johnson"}
-          width={50}
-          height={50}
-          className="rounded-full mr-3"
-        />
+        <div
+          className="size-13 bg-cover bg-center bg-no-repeat rounded-full mr-1"
+          style={{
+            backgroundImage: `url(${
+              community.image || "https://i.postimg.cc/zGr81PKy/group-icon.png"
+            })`,
+          }}
+        ></div>
 
         <div className="flex flex-col">
-          Vibe Coding
-          <p className="text-sm text-muted-foreground">1254 members</p>
+          {community.name}
+          <p className="text-sm text-muted-foreground">
+            {community.chat._count.participants} members
+          </p>
         </div>
 
         <div>
-          <Badge variant="default" className="bg-primary text-white">
-            Group
+          <Badge
+            variant="default"
+            className={` ${
+              communityType === "group" ? "bg-primary" : "bg-[#FF9F41]"
+            } text-white`}
+          >
+            {communityType === "group" ? "Group" : "Class"}
           </Badge>
         </div>
       </div>

@@ -17,7 +17,7 @@ const Users = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const limit = 10;
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const debouncedSearchTerm = useDebounce(searchTerm.trim(), 500);
   const { data, isLoading, isError, error, refetch } = useGetUsersQuery({
     page: currentPage,
     limit,
@@ -31,7 +31,7 @@ const Users = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-[600px] flex justify-center items-center">
+      <div className="min-h-[60vh] flex justify-center items-center">
         <ASpinner size={140} />
       </div>
     );
@@ -39,7 +39,7 @@ const Users = () => {
 
   if (isError) {
     return (
-      <div className="min-h-[600px] flex justify-center items-center">
+      <div className="min-h-[60vh] flex justify-center items-center">
         <AErrorMessage error={error} onRetry={refetch} />
       </div>
     );
@@ -56,7 +56,7 @@ const Users = () => {
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
-            setCurrentPage(1); // Reset to first page on search
+            setCurrentPage(1);
           }}
         />
         <AFilterSelect

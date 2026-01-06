@@ -20,7 +20,6 @@ export const userTypeOptions = [
 ];
 
 export const communityTypeOptions = [
-  { value: "all", label: "All" },
   { value: "group", label: "Group" },
   { value: "class", label: "Class" },
 ];

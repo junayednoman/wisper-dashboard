@@ -10,7 +10,18 @@ const complaintApi = baseApi.injectEndpoints({
       }),
       providesTags: ["complaint"],
     }),
+    resolveComplaint: builder.mutation({
+      query: (id) => ({
+        url: `/complaints/status/${id}`,
+        method: "PATCH",
+        body: {
+          status: "RESOLVED",
+        },
+      }),
+      invalidatesTags: ["complaint"],
+    }),
   }),
 });
 
-export const { useGetComplaintsQuery } = complaintApi;
+export const { useGetComplaintsQuery, useResolveComplaintMutation } =
+  complaintApi;

@@ -6,98 +6,154 @@ import { Eye } from "lucide-react";
 import Image from "next/image";
 import { AccountComplainDetailsModal } from "./modal/AccountDetailsModal";
 import { AAlertDialog } from "@/components/others/AAlertDialog";
+import handleMutation from "@/utils/handleMutation";
+import { useResolveComplaintMutation } from "@/redux/api/complaintApi";
+import { useChangeAccountStatusMutation } from "@/redux/api/userApi";
+import { TBusiness, TPerson } from "@/interface/user.interface";
+import { useDeletePostMutation } from "@/redux/api/postApi";
 
-interface PostCardProps {
+type PostCardData = {
+  id: string;
+  postId: string;
+  author: {
+    id: string;
+    role: "PERSON" | "BUSINESS";
+    status: "ACTIVE" | "BLOCKED";
+    person?: TPerson;
+    business?: TBusiness;
+  };
   description: string;
   views: string;
   timeAgo: string;
   imageUrl: string;
   imageAlt?: string;
-}
+  complaintId: string;
+  reason: string;
+  status: string;
+};
 
-export function ComplainPostCard({ data }: { data: PostCardProps }) {
+export function ComplainPostCard({ data }: { data: PostCardData }) {
   const {
     description,
     views,
     timeAgo,
     imageUrl,
-    imageAlt = "Job preview",
+    imageAlt = "Reported post",
+    reason,
   } = data;
+  const [changeStatus] = useChangeAccountStatusMutation();
+  const [resolveComplaint] = useResolveComplaintMutation();
+  const [deletePost, { isLoading }] = useDeletePostMutation();
+  const handleResolveComplaint = () => {
+    handleMutation(data?.id, resolveComplaint, "Resolving...");
+  };
 
-  const onViewDetails = () => {};
-  const handleDelete = () => {};
+  const handleBlockUser = () => {
+    handleMutation(
+      {
+        id: data?.author?.id,
+        payload: {
+          status: data?.author?.status === "ACTIVE" ? "BLOCKED" : "ACTIVE",
+        },
+      },
+      changeStatus,
+      "Changing status...",
+      () => {
+        handleResolveComplaint();
+      }
+    );
+  };
+
+  const handleDelete = () => {
+    handleMutation(data?.postId, deletePost, "Deleting post...", () => {
+      handleResolveComplaint();
+    });
+  };
+
+  const handleRestrictAndDelete = () => {
+    handleMutation(data?.postId, deletePost, "Deleting post...", () => {
+      handleBlockUser();
+    });
+  };
+
   return (
-    <Card className="max-w-md overflow-hidden border-border p-0 pt-0 mt-0 gap-y-4 bg-transparent">
-      {/* Image Section */}
-
-      <div className="relative aspect-[16/10] w-full overflow-hidden">
+    <Card className="overflow-hidden border-border shadow-sm hover:shadow-lg transition-all duration-300">
+      {/* Post Image */}
+      <div className="relative aspect-[4/3] w-full bg-muted">
         <Image
-          src={imageUrl || "/placeholder.svg"}
+          src={imageUrl}
           alt={imageAlt}
           fill
           className="object-cover"
           priority
         />
       </div>
-      <div className="p-4 pt-0">
-        {/* Content Section */}
-        <CardContent className="px-0">
-          <p className="text-sm leading-relaxed text-foreground">
-            {description}
-          </p>
-        </CardContent>
 
-        {/* Footer Section */}
-        <CardFooter className="flex-col gap-4 px-0 mt-3">
-          {/* Stats Row */}
-          <div className="flex w-full items-center justify-between text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Eye className="size-4" />
-              <span>{views}</span>
-            </div>
-            <span>{timeAgo}</span>
+      {/* Caption */}
+      <CardContent className="p-4 pb-2">
+        <p className="text-sm text-foreground line-clamp-3 leading-relaxed">
+          {description || "No caption"}
+        </p>
+      </CardContent>
+
+      {/* Footer */}
+      <CardFooter className="flex flex-col gap-4 p-4 pt-0">
+        {/* Stats */}
+        <div className="flex w-full items-center justify-between text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <Eye className="h-4 w-4" />
+            <span>{views}</span>
           </div>
+          <span>{timeAgo}</span>
+        </div>
 
-          {/* Action Buttons */}
-          <div className="grid w-full grid-cols-2 gap-3">
-            <AccountComplainDetailsModal
-              user={{
-                name: "Michael Epkot",
-                role: "Flutter Developer",
-                avatar:
-                  "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg?semt=ais_hybrid&w=740&q=80",
-              }}
-              post={{
-                content:
-                  "Everyone on this platform is so stupid, it's embarrassing. You all suck and are a bunch of losers.",
-                stats: "◉ 10K Views • 30 mins",
-              }}
-              reasons={[
-                "Just to let you know this might be a problem",
-                "Disrespectful and harmful behavior",
-                "Violating platform's harassment policy",
-              ]}
-              onRestrict={() => console.log("User restricted")}
-              onRestrictDelete={() =>
-                console.log("User restricted & post deleted")
-              }
+        {/* Actions */}
+        <div className="grid grid-cols-2 gap-3 w-full">
+          {/* View Details Modal */}
+          <AccountComplainDetailsModal
+            user={{
+              name:
+                data?.author?.person?.name ||
+                data?.author?.business?.name ||
+                "Unknown User",
+              role: data?.author?.role || "User",
+              avatar:
+                data?.author?.business?.image ||
+                data?.author?.person?.image ||
+                "",
+            }}
+            complaint={{
+              reason,
+              date: timeAgo,
+              status: data?.status,
+              type: "POST",
+            }}
+            onRestrict={handleBlockUser}
+            onRestrictAndDelete={handleRestrictAndDelete}
+            onResolve={handleResolveComplaint}
+          >
+            <Button variant="outline" className="w-full h-11 font-medium">
+              View Details
+            </Button>
+          </AccountComplainDetailsModal>
+
+          {/* Remove Post */}
+          <AAlertDialog
+            title="Remove Post?"
+            description="This will permanently delete the post and notify the user. This action cannot be undone."
+            actionText="Remove Post"
+            onAction={handleDelete}
+          >
+            <Button
+              disabled={isLoading}
+              variant="destructive"
+              className="w-full h-11 font-medium"
             >
-              <Button
-                variant="outline"
-                className="w-full h-11 bg-card hover:bg-secondary"
-                onClick={onViewDetails}
-              >
-                View details
-              </Button>
-            </AccountComplainDetailsModal>
-            <AAlertDialog onAction={handleDelete}>
-              <Button variant="destructive" className="w-full h-11">
-                Remove
-              </Button>
-            </AAlertDialog>
-          </div>
-        </CardFooter>
-      </div>
+              {isLoading ? "Removing..." : "Remove Post"}
+            </Button>
+          </AAlertDialog>
+        </div>
+      </CardFooter>
     </Card>
   );
 }
