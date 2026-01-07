@@ -1,161 +1,193 @@
 "use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { CreateAdPackageModal } from "./CreateAdPackageModal";
+import {
+  useDeleteBoostPackageMutation,
+  useGetBoostPackagesQuery,
+} from "@/redux/api/boostPackageApi";
+import ASpinner from "@/components/ui/ASpinner";
+import AErrorMessage from "@/components/AErrorMessage";
+import { AlertCircle, Loader, Pencil, Trash2 } from "lucide-react";
+import { AAlertDialog } from "@/components/others/AAlertDialog";
+import handleMutation from "@/utils/handleMutation";
+import { EditAdPackageModal } from "./EditAdPackageModal";
 
-interface Advertisement {
+type BoostPackage = {
   id: string;
   name: string;
-  description: string;
-  status: "Active" | "Ended";
-  budget: number;
-  package: string;
-  impressions: string;
-  clicks: string;
-  impressionsVariant: "success" | "warning" | "danger" | "default";
-  clicksVariant: "success" | "warning" | "danger" | "default";
-}
+  price: number;
+  duration: string;
+  status: "ACTIVE" | "INACTIVE" | "ENDED";
+};
 
-const advertisements: Advertisement[] = [
-  {
-    id: "1",
-    name: "Grow Your Business...",
-    description: "Reach your ideal audience..",
-    status: "Active",
-    budget: 50.0,
-    package: "Basic",
-    impressions: "10k+ Views",
-    clicks: "200+ Clicks",
-    impressionsVariant: "success",
-    clicksVariant: "success",
-  },
-  {
-    id: "2",
-    name: "Grow Your Business...",
-    description: "Reach your ideal audience..",
-    status: "Ended",
-    budget: 50.0,
-    package: "Basic",
-    impressions: "0k+ Views",
-    clicks: "0k+ Clicks",
-    impressionsVariant: "default",
-    clicksVariant: "default",
-  },
-  {
-    id: "3",
-    name: "Grow Your Business...",
-    description: "Reach your ideal audience..",
-    status: "Active",
-    budget: 50.0,
-    package: "Basic",
-    impressions: "2k+ Views",
-    clicks: "200+ Clicks",
-    impressionsVariant: "danger",
-    clicksVariant: "danger",
-  },
-  {
-    id: "4",
-    name: "Grow Your Business...",
-    description: "Reach your ideal audience..",
-    status: "Active",
-    budget: 50.0,
-    package: "Basic",
-    impressions: "2k+ Views",
-    clicks: "200+ Clicks",
-    impressionsVariant: "danger",
-    clicksVariant: "danger",
-  },
-];
-
-function StatusBadge({ status }: { status: "Active" | "Ended" }) {
+function StatusBadge({ status }: { status: string }) {
+  const isActive = status === "ACTIVE";
   return (
     <Badge
       className={cn(
-        "rounded-md px-4 py-1.5 text-xs font-medium border-0",
-        status === "Active" && "bg-green-600/20 text-green-400",
-        status === "Ended" && "bg-yellow-600/20 text-yellow-400"
+        "rounded-full px-3 py-1 text-xs font-medium border-0",
+        isActive
+          ? "bg-green-600/20 text-green-400"
+          : "bg-yellow-600/20 text-yellow-400"
       )}
     >
-      {status}
-    </Badge>
-  );
-}
-
-function MetricBadge({
-  value,
-  variant,
-}: {
-  value: string;
-  variant: "success" | "warning" | "danger" | "default";
-}) {
-  return (
-    <Badge
-      className={cn(
-        "rounded-md px-3 py-1.5 text-xs font-medium border-0",
-        variant === "success" && "bg-green-600/20 text-green-400",
-        variant === "warning" && "bg-yellow-600/20 text-yellow-400",
-        variant === "danger" && "bg-red-600/20 text-red-400",
-        variant === "default" && "bg-muted/50 text-muted-foreground"
-      )}
-    >
-      {value}
+      {isActive ? "Active" : "Inactive"}
     </Badge>
   );
 }
 
 export function AdvertisementTable() {
+  const {
+    data: response,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useGetBoostPackagesQuery("");
+  const [deletePackage, { isLoading: isDeleting }] =
+    useDeleteBoostPackageMutation();
+
+  const packages: BoostPackage[] = response?.data || [];
+
+  // Loading State
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24">
+        <ASpinner size={120} />
+        <p className="mt-6 text-lg text-muted-foreground">
+          Loading boost packages...
+        </p>
+      </div>
+    );
+  }
+
+  // Error State
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <AErrorMessage error={error} onRetry={refetch} />
+      </div>
+    );
+  }
+
+  const handleDelete = (id: string) => {
+    handleMutation(id, deletePackage, "Deleting package...");
+  };
   return (
-    <div>
-      <div className="mb-4 flex justify-end gap-3">
-        <Input
-          name="search"
-          placeholder="Search..."
-          className="w-[250px] h-11"
-        />
+    <div className="space-y-6">
+      {/* Header: Create Button */}
+      <div className="flex justify-end">
         <CreateAdPackageModal>
-          <Button className="rounded-md h-11">Create Package</Button>
+          <Button className="h-11 px-6 font-medium rounded-md shadow-sm">
+            Create Package
+          </Button>
         </CreateAdPackageModal>
       </div>
-      <div className="w-full border border-border rounded-lg bg-card">
-        <div className="grid grid-cols-6 border-b border-border font-medium text-muted-foreground py-5 px-3">
-          <div className="px-4">Advertisement name</div>
-          <div className="px-4">Status</div>
-          <div className="px-4">Budget</div>
-          <div className="px-4">Package</div>
-          <div className="px-4">Impressions</div>
-          <div className="px-4">Clicks</div>
-        </div>
 
-        {advertisements.map((ad) => (
-          <div
-            key={ad.id}
-            className="grid grid-cols-6 border-b border-border last:border-b-0 py-5 px-3"
-          >
-            <div className="px-4 flex flex-col">
-              <span className="text-foreground font-medium">{ad.name}</span>
-              <span className="text-muted-foreground text-xs">
-                {ad.description}
-              </span>
-            </div>
-            <div className="px-4">
-              <StatusBadge status={ad.status} />
-            </div>
-            <div className="px-4">${ad.budget.toFixed(2)}</div>
-            <div className="px-4 text-muted-foreground">{ad.package}</div>
-            <div className="px-4">
-              <MetricBadge
-                value={ad.impressions}
-                variant={ad.impressionsVariant}
-              />
-            </div>
-            <div className="px-4">
-              <MetricBadge value={ad.clicks} variant={ad.clicksVariant} />
-            </div>
+      {/* Empty State */}
+      {packages.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-28 text-center border-2 border-dashed border-border rounded-xl bg-muted/20">
+          <div className="bg-muted/50 rounded-full p-8 mb-8">
+            <AlertCircle className="h-16 w-16 text-muted-foreground" />
           </div>
-        ))}
-      </div>
+          <h3 className="text-2xl font-semibold text-foreground mb-3">
+            No Boost Packages Yet
+          </h3>
+          <p className="text-muted-foreground max-w-md mb-8">
+            Get started by creating your first advertisement boost package.
+          </p>
+          <CreateAdPackageModal>
+            <Button size="lg" className="font-medium">
+              Create Your First Package
+            </Button>
+          </CreateAdPackageModal>
+        </div>
+      ) : (
+        /* Table */
+        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+          {/* Table Header */}
+          <div className="grid grid-cols-12 gap-4 border-b border-border bg-muted/30 px-6 py-5 font-medium text-muted-foreground">
+            <div className="col-span-4">Package Name</div>
+            <div className="col-span-2 text-center">Status</div>
+            <div className="col-span-2 text-center">Price</div>
+            <div className="col-span-2 text-center">Duration</div>
+            <div className="col-span-2 text-center">Actions</div>
+          </div>
+
+          {/* Table Rows */}
+          <div className="divide-y divide-border">
+            {packages.map((pkg) => (
+              <div
+                key={pkg.id}
+                className="grid grid-cols-12 gap-4 px-6 py-6 hover:bg-muted/30 transition-colors"
+              >
+                {/* Package Name + Duration Description */}
+                <div className="col-span-4 flex flex-col justify-center">
+                  <span className="text-foreground font-medium text-base">
+                    {pkg.name}
+                  </span>
+                  <span className="text-sm text-muted-foreground mt-1">
+                    {pkg.duration === "1"
+                      ? "1-day boost"
+                      : `${pkg.duration}-day boost`}
+                  </span>
+                </div>
+
+                {/* Status */}
+                <div className="col-span-2 flex items-center justify-center">
+                  <StatusBadge status={pkg.status} />
+                </div>
+
+                {/* Price */}
+                <div className="col-span-2 flex items-center justify-center font-semibold text-foreground">
+                  ${pkg.price.toFixed(2)}
+                </div>
+
+                {/* Duration */}
+                <div className="col-span-2 flex items-center justify-center text-muted-foreground font-medium">
+                  {pkg.duration} {Number(pkg.duration) === 1 ? "day" : "days"}
+                </div>
+
+                <div className="col-span-2 flex items-center justify-center gap-2">
+                  <EditAdPackageModal
+                    packageData={{
+                      id: pkg.id,
+                      name: pkg.name,
+                      duration: pkg.duration,
+                      price: pkg.price,
+                    }}
+                  >
+                    <Button size="icon" variant="default" className="h-9 w-9">
+                      <Pencil className="h-5 w-5" />
+                    </Button>
+                  </EditAdPackageModal>
+                  <AAlertDialog
+                    title={"Delete?"}
+                    description={`Are you sure you want to delete the package? This action cannot be undone.`}
+                    actionText="Delete"
+                    onAction={() => handleDelete(pkg.id)}
+                  >
+                    <Button
+                      size="icon"
+                      className={`w-[36px] h-[36px] bg-destructive hover:bg-destructive!`}
+                      disabled={isDeleting}
+                    >
+                      {isDeleting ? (
+                        <Loader className="animate-spin" />
+                      ) : (
+                        <Trash2 />
+                      )}
+                    </Button>
+                  </AAlertDialog>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

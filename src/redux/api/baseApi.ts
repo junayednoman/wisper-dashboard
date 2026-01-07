@@ -76,6 +76,8 @@ export const baseApi = createApi({
     "class",
     "recommendation",
     "resumes",
+    "packages",
+    "notifications",
   ],
   endpoints: () => ({}),
 });

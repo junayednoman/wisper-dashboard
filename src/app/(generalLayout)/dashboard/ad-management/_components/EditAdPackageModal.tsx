@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogOverlay,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -15,22 +14,35 @@ import { Button } from "@/components/ui/button";
 import { adPackageSchema } from "./AdPackageValidation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useCreateBoostPackageMutation } from "@/redux/api/boostPackageApi";
+import { useUpdateBoostPackageMutation } from "@/redux/api/boostPackageApi";
+import { DialogOverlay } from "@radix-ui/react-dialog";
 import handleMutation from "@/utils/handleMutation";
 
-interface CreateAdPackageModalProps {
+interface EditAdPackageModalProps {
   children?: React.ReactNode;
+  packageData: {
+    id: string;
+    name: string;
+    price: number;
+    duration: string;
+  };
 }
 
-export function CreateAdPackageModal({ children }: CreateAdPackageModalProps) {
+export function EditAdPackageModal({
+  children,
+  packageData,
+}: EditAdPackageModalProps) {
   const [open, setOpen] = useState(false);
-  const [createPackage, { isLoading }] = useCreateBoostPackageMutation();
+  const [updatePackage, { isLoading }] = useUpdateBoostPackageMutation();
 
   const onSubmit = async (data: any) => {
     data.price = Number(data.price);
-    handleMutation(data, createPackage, "Creating...", () => {
-      setOpen(false);
-    });
+    handleMutation(
+      { id: packageData.id, payload: data },
+      updatePackage,
+      "Updating...",
+      setOpen(false)
+    );
   };
 
   return (
@@ -40,7 +52,7 @@ export function CreateAdPackageModal({ children }: CreateAdPackageModalProps) {
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-semibold">
-            Create Boost Package
+            Edit Boost Package
           </DialogTitle>
         </DialogHeader>
 
@@ -48,9 +60,9 @@ export function CreateAdPackageModal({ children }: CreateAdPackageModalProps) {
           schema={adPackageSchema}
           onSubmit={onSubmit}
           defaultValues={{
-            name: "",
-            price: "",
-            duration: "",
+            name: packageData.name,
+            price: packageData.price.toString(),
+            duration: packageData.duration,
           }}
         >
           <div className="space-y-5 py-4">
@@ -77,20 +89,32 @@ export function CreateAdPackageModal({ children }: CreateAdPackageModalProps) {
               required
             />
 
-            <Button
-              type="submit"
-              className="w-full h-12 text-base font-medium"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Creating Package...
-                </>
-              ) : (
-                "Create Package"
-              )}
-            </Button>
+            <div className="flex flex-col gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full h-12"
+                onClick={() => setOpen(false)}
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+
+              <Button
+                type="submit"
+                className="w-full h-12 text-base font-medium"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Saving Changes...
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
+              </Button>
+            </div>
           </div>
         </AForm>
       </DialogContent>

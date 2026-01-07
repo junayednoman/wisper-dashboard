@@ -1,12 +1,20 @@
-import { Megaphone } from "lucide-react";
+type Props = {
+  data: {
+    title: string;
+    value: number;
+    icon: React.ReactNode;
+  };
+};
 
-const AdStatCard = () => {
+const AdStatCard = ({ data }: Props) => {
   return (
     <div className="bg-card p-3 rounded-xl px-5">
-      <h4 className="text-xl font-semibold text-card-foreground">Total Ads</h4>
+      <h4 className="text-xl font-semibold text-card-foreground">
+        {data.title}
+      </h4>
       <div className="flex items-center gap-2 text-muted-foreground mt-4">
-        <Megaphone size={18} />
-        <p>230</p>
+        {data.icon}
+        <p>{data.value}</p>
       </div>
     </div>
   );
