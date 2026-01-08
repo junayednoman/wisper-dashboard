@@ -4,33 +4,43 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProfileHeader from "./ProfileHeader";
 import EditProfileForm from "./EditProfileForm";
+import { useGetProfileQuery } from "@/redux/api/profileApi";
+import ASpinner from "@/components/ui/ASpinner";
+import AErrorMessage from "@/components/AErrorMessage";
 import ChangePasswordForm from "./ChangePasswordForm";
-// import { useGetProfileQuery } from "@/redux/api/profileApi";
-// import ASpinner from "@/components/ui/ASpinner";
-// import AErrorMessage from "@/components/AErrorMessage";
+
 const ProfileContainer = () => {
   const [activeTab, setActiveTab] = useState("edit-profile");
-  // const { data, isLoading, isError, error, refetch } = useGetProfileQuery("");
-  // console.log("error", error);
-  // if (isLoading) return <ASpinner size={150} className="py-56" />;
-  // if (isError)
-  //   return <AErrorMessage className="py-56" error={error} onRetry={refetch} />;
 
-  const profile = {
-    name: "John Doe",
-    email: "h5Vt2@example.com",
-    photoUrl:
-      "https://img.freepik.com/free-psd/3d-illustration-with-online-avatar_23-2151303048.jpg?semt=ais_hybrid&w=740&q=80",
-    address: "123 Main St, Anytown, USA",
-  };
+  const {
+    data: profileResponse,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useGetProfileQuery({});
+
+  const profile = profileResponse?.data;
+
+  if (isLoading) return <ASpinner size={150} className="py-56" />;
+
+  if (isError)
+    return <AErrorMessage className="py-56" error={error} onRetry={refetch} />;
+
+  if (!profile)
+    return (
+      <div className="py-56 text-center text-muted-foreground">
+        No profile data found
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-card p-6 rounded-lg">
       <div className="max-w-2xl mx-auto space-y-8">
         <ProfileHeader
-          name={profile?.name || ""}
-          role={"Admin"}
-          avatar={profile?.photoUrl}
+          name={profile.name || "Admin"}
+          role="Admin"
+          avatar={profile.profileImage || undefined}
         />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -53,9 +63,9 @@ const ProfileContainer = () => {
             <TabsContent value="edit-profile" className="mt-0">
               <EditProfileForm
                 defaultValues={{
-                  name: profile?.name || "",
-                  email: profile?.email || "",
-                  address: profile?.address || "",
+                  name: profile.name || "",
+                  email: profile.email || "",
+                  phone: profile.phone || "",
                 }}
               />
             </TabsContent>

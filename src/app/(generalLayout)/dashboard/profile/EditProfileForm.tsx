@@ -18,7 +18,12 @@ const EditProfileForm = ({ defaultValues }: EditProfileFormProps) => {
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
 
   const handleEditProfile = (data: EditProfileFormValues) => {
-    handleMutation(data, updateProfile, "Updating profile...");
+    const payload = {
+      name: data.name,
+      phone: data.phone || null,
+    };
+
+    handleMutation(payload, updateProfile, "Updating profile...");
   };
 
   return (
@@ -47,10 +52,9 @@ const EditProfileForm = ({ defaultValues }: EditProfileFormProps) => {
           required
         />
         <AInput
-          name="address"
-          label="Address"
-          placeholder="Enter your address"
-          required
+          name="phone"
+          label="Phone Number"
+          placeholder="Enter your phone number"
         />
         <Button disabled={isLoading} type="submit" className="w-full h-[50px]">
           {isLoading ? "Updating..." : "Update Profile"}

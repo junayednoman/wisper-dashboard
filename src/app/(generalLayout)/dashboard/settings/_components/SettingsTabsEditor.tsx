@@ -1,71 +1,79 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Save, Check, Loader2 } from "lucide-react";
 import JoditTextEditor from "@/components/form/ATextEditor";
-// import ASpinner from "@/components/ui/ASpinner";
-// import AErrorMessage from "@/components/AErrorMessage";
-// import {
-//   useGetContentsQuery,
-//   useUpdateContentMutation,
-// } from "@/redux/api/contentApi";
-// import handleMutation from "@/utils/handleMutation";
+import ASpinner from "@/components/ui/ASpinner";
+import AErrorMessage from "@/components/AErrorMessage";
+import { useGetLegalQuery, useUpdateLegalMutation } from "@/redux/api/legalApi";
+import { toast } from "sonner"; // <-- Added
 
 interface ContentSection {
   id: string;
   title: string;
   content: string;
+  field: "aboutUs" | "termsAndConditions" | "privacyPolicy";
 }
 
 const SettingsTabsEditor = () => {
   const [activeTab, setActiveTab] = useState("about");
   const [savingStates, setSavingStates] = useState<Record<string, boolean>>({});
   const [savedStates, setSavedStates] = useState<Record<string, boolean>>({});
+
+  const {
+    data: legalResponse,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useGetLegalQuery({ page: 1, limit: 1 });
+
+  const [updateLegal] = useUpdateLegalMutation();
+
+  const legalData = legalResponse?.data;
+
   const [contentSections, setContentSections] = useState<ContentSection[]>([
-    { id: "about", title: "About Us", content: "" },
-    { id: "terms", title: "Terms & Conditions", content: "" },
-    { id: "privacy", title: "Privacy Policy", content: "" },
-    { id: "supports", title: "Supports", content: "" },
-    { id: "faq", title: "FAQ", content: "" },
+    { id: "about", title: "About Us", content: "", field: "aboutUs" },
+    {
+      id: "terms",
+      title: "Terms & Conditions",
+      content: "",
+      field: "termsAndConditions",
+    },
+    {
+      id: "privacy",
+      title: "Privacy Policy",
+      content: "",
+      field: "privacyPolicy",
+    },
   ]);
 
-  // const {
-  //   data: contentsResponse,
-  //   isLoading,
-  //   isError,
-  //   error,
-  //   refetch,
-  // } = useGetContentsQuery({ page: 1, limit: 1 });
-  // const [updateContent] = useUpdateContentMutation();
-  // const content = contentsResponse?.data[0];
-
-  const content = {
-    _id: "",
-    aboutUs: "",
-    termsAndConditions: "",
-    privacyPolicy: "",
-  };
-
-  // Initialize content sections from API
-  // if (content && contentSections.every((section) => !section.content)) {
-  //   setContentSections([
-  //     { id: "about", title: "About Us", content: content.aboutUs },
-  //     {
-  //       id: "terms",
-  //       title: "Terms & Conditions",
-  //       content: content.termsAndConditions,
-  //     },
-  //     {
-  //       id: "privacy",
-  //       title: "Privacy Policy",
-  //       content: content.privacyPolicy,
-  //     },
-  //     { id: "supports", title: "Supports", content: content.supports },
-  //     { id: "faq", title: "FAQ", content: content.faq },
-  //   ]);
-  // }
+  useEffect(() => {
+    if (legalData) {
+      setContentSections([
+        {
+          id: "about",
+          title: "About Us",
+          content: legalData.aboutUs || "",
+          field: "aboutUs",
+        },
+        {
+          id: "terms",
+          title: "Terms & Conditions",
+          content: legalData.termsAndConditions || "",
+          field: "termsAndConditions",
+        },
+        {
+          id: "privacy",
+          title: "Privacy Policy",
+          content: legalData.privacyPolicy || "",
+          field: "privacyPolicy",
+        },
+      ]);
+    }
+  }, [legalData]);
 
   const handleContentChange = (sectionId: string, content: string) => {
     setContentSections((prev) =>
@@ -76,51 +84,56 @@ const SettingsTabsEditor = () => {
     setSavedStates((prev) => ({ ...prev, [sectionId]: false }));
   };
 
-  const handleSave = (sectionId: string) => {
-    if (!content) return;
+  const handleSave = async (sectionId: string) => {
+    if (!legalData) return;
+
+    const section = contentSections.find((s) => s.id === sectionId);
+    if (!section) return;
 
     setSavingStates((prev) => ({ ...prev, [sectionId]: true }));
 
-    // const section = contentSections.find((s) => s.id === sectionId);
-    // const payload = {
-    //   id: content._id,
-    //   aboutUs: sectionId === "about" ? section?.content || "" : content.aboutUs,
-    //   termsAndConditions:
-    //     sectionId === "terms"
-    //       ? section?.content || ""
-    //       : content.termsAndConditions,
-    //   privacyPolicy:
-    //     sectionId === "privacy"
-    //       ? section?.content || ""
-    //       : content.privacyPolicy,
-    //   supports:
-    //     sectionId === "supports" ? section?.content || "" : content.supports,
-    //   faq: sectionId === "faq" ? section?.content || "" : content.faq,
-    // };
+    const payload = {
+      aboutUs:
+        section.id === "about" ? section.content : legalData.aboutUs || "",
+      termsAndConditions:
+        section.id === "terms"
+          ? section.content
+          : legalData.termsAndConditions || "",
+      privacyPolicy:
+        section.id === "privacy"
+          ? section.content
+          : legalData.privacyPolicy || "",
+    };
 
-    // handleMutation(
-    //   payload,
-    //   updateContent,
-    //   `Saving ${section?.title}...`,
-    //   () => {
-    //     setSavedStates((prev) => ({ ...prev, [sectionId]: true }));
-    //     setTimeout(() => {
-    //       setSavedStates((prev) => ({ ...prev, [sectionId]: false }));
-    //     }, 2000);
-    //     setSavingStates((prev) => ({ ...prev, [sectionId]: false }));
-    //   }
-    // );
+    try {
+      await updateLegal(payload).unwrap();
+      toast.success(`${section.title} updated successfully!`);
+
+      setSavedStates((prev) => ({ ...prev, [sectionId]: true }));
+      setTimeout(() => {
+        setSavedStates((prev) => ({ ...prev, [sectionId]: false }));
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to update legal content:", err);
+      toast.error(
+        `Failed to save ${section.title.toLowerCase()}. Please try again.`
+      );
+    } finally {
+      setSavingStates((prev) => ({ ...prev, [sectionId]: false }));
+    }
   };
 
-  // if (isLoading) return <ASpinner size={150} className="py-64" />;
-  // if (isError)
-  //   return <AErrorMessage error={error} onRetry={refetch} className="py-64" />;
-  // if (!content)
-  //   return (
-  //     <div className="py-64 text-center text-muted-foreground">
-  //       No content found
-  //     </div>
-  //   );
+  if (isLoading) return <ASpinner size={150} className="py-64" />;
+
+  if (isError)
+    return <AErrorMessage error={error} onRetry={refetch} className="py-64" />;
+
+  if (!legalData)
+    return (
+      <div className="py-64 text-center text-muted-foreground">
+        No content found
+      </div>
+    );
 
   return (
     <div className="h-screen bg-background flex flex-col">
@@ -130,8 +143,7 @@ const SettingsTabsEditor = () => {
           onValueChange={setActiveTab}
           className="flex flex-col"
         >
-          {/* Tabs Header */}
-          <TabsList className="grid w-full grid-cols-5 bg-card h-14">
+          <TabsList className="grid w-full grid-cols-3 bg-card h-14">
             <TabsTrigger
               value="about"
               className="data-[state=active]:bg-primary data-[state=active]:text-card"
@@ -152,7 +164,6 @@ const SettingsTabsEditor = () => {
             </TabsTrigger>
           </TabsList>
 
-          {/* Tab Content */}
           <div className="flex-1 flex flex-col">
             {contentSections.map((section) => (
               <TabsContent
@@ -161,7 +172,6 @@ const SettingsTabsEditor = () => {
                 className="flex-1 flex flex-col mt-0"
               >
                 <div className="flex-1 flex flex-col">
-                  {/* Title */}
                   <div className="p-6 border-b border-border">
                     <h1 className="text-2xl font-bold text-foreground">
                       {section.title}
@@ -171,7 +181,6 @@ const SettingsTabsEditor = () => {
                     </p>
                   </div>
 
-                  {/* Editor */}
                   <div className="flex-1 p-6">
                     <div className="h-fit bg-background border border-border rounded-lg overflow-hidden">
                       <JoditTextEditor
@@ -184,7 +193,6 @@ const SettingsTabsEditor = () => {
                     </div>
                   </div>
 
-                  {/* Save Button */}
                   <div className="p-6 border-t border-border">
                     <div className="flex justify-end">
                       <Button

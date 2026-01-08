@@ -35,4 +35,9 @@ const boostPackageApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetBoostPackagesQuery , useCreateBoostPackageMutation, useUpdateBoostPackageMutation, useDeleteBoostPackageMutation} = boostPackageApi;
+export const {
+  useGetBoostPackagesQuery,
+  useCreateBoostPackageMutation,
+  useUpdateBoostPackageMutation,
+  useDeleteBoostPackageMutation,
+} = boostPackageApi;

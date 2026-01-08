@@ -13,13 +13,13 @@ import handleMutation from "@/utils/handleMutation";
 const ChangePasswordForm = () => {
   const [changePassword, { isLoading }] = useChangePasswordMutation();
 
-  const handlePasswordChange = (data: ChangePasswordFormValues) => {
+  const handlePasswordChange = async (data: ChangePasswordFormValues) => {
     const payload = {
       oldPassword: data.currentPassword,
       newPassword: data.newPassword,
     };
 
-    handleMutation(payload, changePassword, "Changing password...");
+    handleMutation(payload, changePassword, "Changing Password...", () => {});
   };
 
   return (
@@ -30,11 +30,11 @@ const ChangePasswordForm = () => {
 
       <AForm<ChangePasswordFormValues>
         schema={changePasswordSchema}
-        defaultValues={
-          { currentPassword: "", newPassword: "", confirmPassword: "" } as
-            | ChangePasswordFormValues
-            | undefined
-        }
+        defaultValues={{
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        }}
         onSubmit={handlePasswordChange}
       >
         <AInput
@@ -59,7 +59,7 @@ const ChangePasswordForm = () => {
           required
         />
         <Button disabled={isLoading} type="submit" className="w-full h-[50px]">
-          {isLoading ? "Saving..." : "Save & Change"}
+          {isLoading ? "Changing Password..." : "Save & Change"}
         </Button>
       </AForm>
     </div>

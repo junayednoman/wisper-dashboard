@@ -6,7 +6,14 @@ const notificationApi = baseApi.injectEndpoints({
       query: (params) => ({
         url: `/notifications`,
         method: "GET",
-        params
+        params,
+      }),
+      providesTags: ["notifications"],
+    }),
+    getUnseenNotificationCount: builder.query({
+      query: () => ({
+        url: `/notifications/unseen-count`,
+        method: "GET",
       }),
       providesTags: ["notifications"],
     }),
@@ -29,4 +36,9 @@ const notificationApi = baseApi.injectEndpoints({
   }),
 });
 
-export const {useGetNotificationsQuery, useSeenNotificationsMutation, useDeleteNotificationsMutation} = notificationApi;
+export const {
+  useGetNotificationsQuery,
+  useGetUnseenNotificationCountQuery,
+  useSeenNotificationsMutation,
+  useDeleteNotificationsMutation,
+} = notificationApi;
