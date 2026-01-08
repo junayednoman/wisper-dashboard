@@ -28,12 +28,14 @@ const baseQueryWithReauth: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
+  console.log("hitting logout 0");
   let result = await baseQuery(args, api, extraOptions);
 
   // retrieve new token
   if (result?.error?.status === 401) {
+    console.log("hitting logout 1");
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh-token`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auths/refresh-token`,
       {
         method: "GET",
         headers: {
@@ -43,21 +45,24 @@ const baseQueryWithReauth: BaseQueryFn<
       }
     ).then((res) => res.json());
 
-    if (res?.data?.wisperAccessToken) {
+    if (res?.data?.accessToken) {
+      console.log("hitting logout 2");
       const user = (api.getState() as RootState).auth.user;
 
       api.dispatch(
         setUser({
           user,
-          token: res.data.wisperAccessToken,
+          token: res.data.accessToken,
         })
       );
 
       result = await baseQuery(args, api, extraOptions);
     } else {
+      console.log("hitting logout 3");
       api.dispatch(logOut());
     }
   }
+  console.log('hitting here 4');
   return result;
 };
 

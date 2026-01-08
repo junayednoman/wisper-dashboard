@@ -31,7 +31,6 @@ export async function middleware(request: NextRequest) {
 
       const currentTime = Math.floor(Date.now() / 1000);
       if (decodedUser.exp < currentTime) {
-        console.log("Token has expired");
         decodedUser = null;
       } else {
         isAuthenticated = true;
