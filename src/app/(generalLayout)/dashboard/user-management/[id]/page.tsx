@@ -7,8 +7,13 @@ export const metadata: Metadata = {
   title: "User details",
 };
 
-const UserDetailsPage = ({ params }: { params: { id: string } }) => {
-  const id = params.id;
+export default async function UserDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
   return (
     <>
       <AContainer>
@@ -17,6 +22,4 @@ const UserDetailsPage = ({ params }: { params: { id: string } }) => {
       <UserDetailsTabs />
     </>
   );
-};
-
-export default UserDetailsPage;
+}
