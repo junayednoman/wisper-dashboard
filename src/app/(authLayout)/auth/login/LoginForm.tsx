@@ -39,7 +39,7 @@ const LoginForm = () => {
       { email, password },
       login,
       "Logging in...",
-      onSuccess
+      onSuccess,
     );
   };
 
@@ -57,7 +57,7 @@ const LoginForm = () => {
         schema={loginSchema}
         defaultValues={{
           email: "lerner.curious@gmail.com",
-          password: "Admin@1234",
+          password: "Admin@123",
           rememberPassword: false,
         }}
         onSubmit={onSubmit}

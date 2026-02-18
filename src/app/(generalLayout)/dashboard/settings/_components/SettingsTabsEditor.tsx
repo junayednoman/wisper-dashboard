@@ -128,12 +128,12 @@ const SettingsTabsEditor = () => {
   if (isError)
     return <AErrorMessage error={error} onRetry={refetch} className="py-64" />;
 
-  if (!legalData)
-    return (
-      <div className="py-64 text-center text-muted-foreground">
-        No content found
-      </div>
-    );
+  // if (!legalData)
+  //   return (
+  //     <div className="py-64 text-center text-muted-foreground">
+  //       No content found
+  //     </div>
+  //   );
 
   return (
     <div className="h-screen bg-background flex flex-col">
